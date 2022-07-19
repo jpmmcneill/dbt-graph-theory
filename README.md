@@ -71,6 +71,17 @@ dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles
 
 The style of integration test is raw data that is seeded and validated against by running a model and running tests that should pass when the expected result is present.
 
+### Viewing local data
+
+To view data generated in the integration tests locally, simply connect to the database and query the given table:
+
+```
+psql ci_db
+select * from <table>;
+...
+quit -- to end the server connection
+```
+
 All CI models are required to run and pass tests for a merge to be allowed.
 
 ## Available Tests
