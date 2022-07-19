@@ -33,3 +33,5 @@ jobs:
         run: dbt deps
       - name: Run dbt seed
         run: dbt seed --profiles-dir profiles
+      - name: Run dbt models & tests
+        run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir profiles
