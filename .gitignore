@@ -1,4 +1,6 @@
-
+# DBT
 target/
 dbt_packages/
 logs/
+# POSTGRESQL CONFIG
+integration_tests/config/
