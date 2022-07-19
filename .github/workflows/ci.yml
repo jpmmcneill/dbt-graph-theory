@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    services:
+      postgres:
+        image: postgres:14.0-alpine
+        env:
+          POSTGRES_USER: ci_user
+          POSTGRES_DB: ci_db
+          POSTGRES_PASSWORD: ci
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
