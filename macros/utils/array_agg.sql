@@ -7,7 +7,8 @@
 {% endmacro %}
 
 {% macro postgres__array_agg(field, distinct, order_field, order) %}
-    array_agg({{"distinct" if distinct}} {{ field }} {{"order by " ~ order_field ~ " " ~ order if order_field }})
+    {# nulls are removed from postgres to keep it alligned with other implementations #}
+    array_remove(array_agg({{"distinct" if distinct}} {{ field }} {{"order by " ~ order_field ~ " " ~ order if order_field }}), null)
 {% endmacro %}
 
 {% macro default__array_agg(field, distinct, order_field, order) %}
