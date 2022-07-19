@@ -1,5 +1,8 @@
 name: CI
-
+defaults:
+  run:
+    shell: bash
+    working-directory: integration_tests
 on: [push]
 jobs:
   build:
@@ -18,3 +21,9 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+      - name: Setup python venv
+        uses: syphar/restore-virtualenv@v1
+        with:
+          requirement_files: integration_tests/requirements.txt 
