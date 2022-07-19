@@ -23,10 +23,10 @@
     
     with recursive rename_input as (
         select
-            {{ graph_id if graph_id else '1'}} as graph_id,
-            {{ edge_id }} as id,
-            {{ vertex_1 }} as vertex_1,
-            {{ vertex_2 }} as vertex_2
+            {{ graph_id if graph_id else '1'}}::text as graph_id,
+            {{ edge_id }}::text as id,
+            {{ vertex_1 }}::text as vertex_1,
+            {{ vertex_2 }}::text as vertex_2
         from
             {{ input }}
     ),
@@ -137,14 +137,14 @@
         select
             _input.*,
             concat(
-                {{ graph_id if graph_id else "''"}}::text,
+                {{ graph_id if graph_id else "''"}},
                 {{ "'__,'" if graph_id }}
                 subgraphs.subgraph_id
             ) as subgraph_id,
             subgraphs.subgraph_members
         from {{ input }} as _input
         left join generate_subgraph_id as subgraphs on
-            coalesce(_input.{{ vertex_1 }}, _input.{{ vertex_2 }}) = subgraphs.vertex
+            coalesce(_input.{{ vertex_1 }}::text, _input.{{ vertex_2 }}::text) = subgraphs.vertex
     )
 
     select * from join_detail
