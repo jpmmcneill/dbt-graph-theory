@@ -1,0 +1,10 @@
+id,vertex_1,vertex_2
+1,A,B
+2,B,C
+3,C,D
+4,B,D
+5,A,C
+6,B,E
+7,E,D
+8,A,
+9,E,

@@ -1,0 +1,12 @@
+integration_tests:
+  target: ci
+  outputs:
+    ci:
+      type: postgres
+      host: localhost
+      user: ci_user
+      password: "ci"
+      port: 5432
+      dbname: ci_db
+      schema: ci_schema
+      threads: 2
