@@ -1,0 +1,18 @@
+name: "dbt_graph_theory_integration_tests"
+version: "1.0"
+
+profile: "integration_tests"
+
+config-version: 2
+
+model-paths: ["models"]
+test-paths: ["tests"]
+seed-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_modules", "dbt_packages"]
+
+models:
+  dbt_graph_theory_integration_tests:
+    materialized: table

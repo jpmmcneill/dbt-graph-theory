@@ -1,0 +1,3 @@
+#!/bin/bash
+pg_ctl stop -D config > /dev/null 2>&1;
+rm -rf config > /dev/null 2>&1;

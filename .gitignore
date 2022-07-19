@@ -1,4 +1,7 @@
-
+# DBT
 target/
 dbt_packages/
 logs/
+# CI CONFIG
+integration_tests/ci_venv/
+integration_tests/config/
