@@ -2,5 +2,6 @@
 target/
 dbt_packages/
 logs/
-# POSTGRESQL CONFIG
+# CI CONFIG
+integration_tests/ci_venv/
 integration_tests/config/
