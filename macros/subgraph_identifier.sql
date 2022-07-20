@@ -5,7 +5,38 @@
     vertex_2='vertex_2',
     graph_id=none
 ) %}
-    
+    {#
+        This macro takes a graph in the following structure, and identifies connected subgraphs of the same table.
+        Additional fields to the below are preserved and outputed by the macro.
+        
+        Required [minimal] table structure:
+        graph_id (Optional, Any):
+            An identifier at the graph level (ie. if the table in question represents multiple graphs).
+            When this is not defined, it is assumed that the table represents the one graph.
+        edge_id (Any):
+            An identifier of the edge (from vertex_1 to vertex_2). This field should be unique at the graph level.
+        vertex_1 (Any - convertable to text & same data type to vertex_2):
+            The alias for the first (origin, for directed graphs) vertex of the given edge_id.
+            Nulls are allowed, and correspond to the given vertex_2 not being connected to any other vertices.
+        vertex_2 (Any - convertable to text & same data type to vertex_2):
+            The alias for the second (destination, for directed graphs) vertex of the given edge_id.
+            Nulls are allowed, and correspond to the given vertex_1 not being connected to any other vertices.
+
+        It returns the original table, with two new fields:
+        subgraph_id (text):
+            An identifier of the (connected) subgraph for the given vertices for the given edge.
+            This is unique at the graph level.  
+        subgraph_members (array[Any]):
+            An array of the vertices that constitute the given subgraph. The data type of the array is that of the vertex_1 and vertex_2 fields. 
+
+        Parameters:
+        input (text or a ref / source): The input model or CTE that follows the structure above.
+        edge_id (text): The field corresponding to the edge_id field described above.
+        vertex_1 (text): The field corresponding to the vertex_1 field described above.
+        vertex_2 (text): The field corresponding to the vertex_2 field described above.
+        graph_id (text, Optional, default = None): The field corresponding to the graph_id field described above.
+    #}
+
     with recursive rename_input as (
         select
             {{ graph_id if graph_id else '1'}}::text as graph_id,
