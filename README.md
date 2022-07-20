@@ -3,11 +3,13 @@
 [![](https://img.shields.io/static/v1?label=dbt-core&message=1.0.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-core)
 [![](https://img.shields.io/static/v1?label=dbt-utils&message=0.8.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-utils/)
 
-README structure inspired by dbt-date and dbt-expectations.
+**Note**: README structure inspired by dbt-date and dbt-expectations.
 
 A DBT package designed to help SQL based analysis of graphs.
 
 ## Variables
+
+This package currently has no variables that need to be configured.
 
 ## Integration Tests (Developers Only)
 
@@ -87,3 +89,13 @@ All CI models are required to run and pass tests for a merge to be allowed.
 ## Available Tests
 
 ## Available Macros
+### Graph Macros
+1. [subgraph_identifier](macros/subgraph_identifier.sql) - macro is documented in it's docstring - see the raw code.
+
+
+### Cross DB Utils
+Note that the below are designed for internal (ie. dbt-graph-theory) use only. Use them at your own risk!
+- [array_agg](macros/utils/array_agg.sql)
+- [array_append](macros/utils/array_append.sql)
+- [array_construct](macros/utils/array_construct.sql)
+- [array_contains](macros/utils/array_contains.sql)
