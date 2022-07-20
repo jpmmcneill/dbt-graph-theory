@@ -30,3 +30,14 @@ models:
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
+  - name: test_subgraph_identifier_no_data
+    description: Unit test checking a situation no data.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
+  - name: test_subgraph_identifier_no_data_graph_id
+    description: Unit test checking a situation no data but with graph_id defined.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
+
