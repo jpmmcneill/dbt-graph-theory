@@ -137,8 +137,8 @@
         select
             _input.*,
             concat(
-                {{ graph_id if graph_id else "''"}},
-                {{ "'__,'" if graph_id }}
+                {{ '_input.'~graph_id if graph_id else "''"}},
+                {{ "'__'," if graph_id }}
                 subgraphs.subgraph_id
             ) as subgraph_id,
             subgraphs.subgraph_members

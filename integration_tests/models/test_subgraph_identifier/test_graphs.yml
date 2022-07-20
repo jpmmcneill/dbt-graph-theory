@@ -20,4 +20,8 @@ models:
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-
+  - name: test_subgraph_identifier_graph_id
+    description: Unit test checking a situation with 2 graph ids, one with two subgraphs and one with 1 subgraph
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
