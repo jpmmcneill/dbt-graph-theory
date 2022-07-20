@@ -1,8 +1,3 @@
--- default input structure is:
--- id
--- vertex_1
--- vertex_2
-
 {% macro subgraph_identifier(
     input,
     edge_id='id',
@@ -10,16 +5,6 @@
     vertex_2='vertex_2',
     graph_id=none
 ) %}
-    {#
-        This macro returns the same table, with two additional fields:
-
-        Parameters:
-        input: description
-        edge_id: description
-        vertex_1: description
-        vertex_2: description
-        graph_id (Optional, default = None): description
-    #}
     
     with recursive rename_input as (
         select
@@ -78,6 +63,7 @@
         from 
             all_edges
         inner join all_vertexs on
+            all_vertexs.graph_id = all_edges.graph_id and
             all_vertexs.vertex = all_edges.vertex_1
         union all
         select
@@ -92,9 +78,9 @@
             -- walk from the "end" vertex of the last edge to the "start" vertex of the next edge
             -- only walk there if the target vertex has not already been reached on the walk
             -- note: while this does not guarantee full coverage on each path, it means that every reachable vertex from every original vertex has a row.
+            graph_walk.graph_id = all_edges.graph_id and
             graph_walk.vertex_2 = all_edges.vertex_1 and
-            not({{ dbt_graph_theory.array_contains(array='graph_walk.path_array', value='all_edges.vertex_2') }}) and
-            graph_walk.graph_id = all_edges.graph_id
+            not({{ dbt_graph_theory.array_contains(array='graph_walk.path_array', value='all_edges.vertex_2') }})
     ),
 
     all_paths as (
@@ -129,7 +115,7 @@
             graph_id,
             vertex,
             subgraph_members,
-            dense_rank() over (partition by graph_id order by subgraph_members) as subgraph_id
+            (dense_rank() over (partition by graph_id order by subgraph_members))::text as subgraph_id
         from node_subgraphs
     ),
 
@@ -145,6 +131,7 @@
         from {{ input }} as _input
         left join generate_subgraph_id as subgraphs on
             coalesce(_input.{{ vertex_1 }}::text, _input.{{ vertex_2 }}::text) = subgraphs.vertex
+            {{ 'and _input.' ~ graph_id ~ '::text = subgraphs.graph_id' if graph_id }}
     )
 
     select * from join_detail
