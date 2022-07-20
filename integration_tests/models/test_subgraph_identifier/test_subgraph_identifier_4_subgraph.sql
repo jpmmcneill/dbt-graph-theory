@@ -1,6 +1,6 @@
 with computed as (
     {{ dbt_graph_theory.subgraph_identifier(
-        input=ref('test_subgraph_identifier_4_subgraphs_data')
+        input=ref('test_subgraph_identifier_4_subgraph_data')
     )}}
 ),
 

@@ -1,21 +1,21 @@
 version: 2
 models:
-  - name: test_subgraph_identifier_1_subgraphs
+  - name: test_subgraph_identifier_1_subgraph
     description: Unit test checking a situation with 1 subgraph and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_4_subgraphs
+  - name: test_subgraph_identifier_4_subgraph
     description: Unit test checking a situation with 4 subgraphs and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_2_subgraphs_no_edge
+  - name: test_subgraph_identifier_2_subgraph_no_edge
     description: Unit test checking a situation with 1 subgraph, no connecting edges and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_3_subgraphs_no_edge
+  - name: test_subgraph_identifier_3_subgraph_no_edge
     description: Unit test checking a situation with 3 subgraphs, no connecting edges and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
@@ -25,7 +25,7 @@ models:
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_graph_id_3_subgraphs
+  - name: test_subgraph_identifier_graph_id_3_subgraph
     description: Unit test checking a situation with 2 graph ids, with three subgraphs each.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
