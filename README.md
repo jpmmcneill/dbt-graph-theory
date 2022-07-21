@@ -7,10 +7,12 @@
 
 A DBT package designed to help SQL based analysis of graphs.
 
+----
 ## Variables
 
 This package currently has no variables that need to be configured.
 
+----
 ## Integration Tests (Developers Only)
 
 This section assumes development on a mac, where python3 & postgresql are installed. While this package supports both snowflake and postgres, only postgres integration tests are currently implemented.
@@ -86,16 +88,36 @@ quit -- to end the server connection
 
 All CI models are required to run and pass tests for a merge to be allowed.
 
-## Available Tests
+----
+## Contents
 
-## Available Macros
-### Graph Macros
-1. [subgraph_identifier](macros/subgraph_identifier.sql) - macro is documented in it's docstring - see the raw code.
+**[Generic tests](#generic-tests)**
+  - [graph_is_connected](#graph_is_connected)
 
+**[Macros](#macros)**
+  - [subgraph_identifier](#subgraph_identifier)
 
-### Cross DB Utils
+**[Helper Macros](#helper-macros)**
+  - [array_agg](#array_agg)
+  - [array_append](#array_append)
+  - [array_construct](#array_construct)
+  - [array_contains](#array_contains)
+## Generic Tests
+
+### [graph_is_connected](tests/generic/graph_is_connected.sql)
+Tests whether the give graph is connected or not.
+
+## Macros
+### [subgraph_identifier](macros/subgraph_identifier.sql)
+Macro is documented in it's docstring - see the raw code.
+
+## Helper Macros
 Note that the below are designed for internal (ie. dbt-graph-theory) use only. Use them at your own risk!
-- [array_agg](macros/utils/array_agg.sql)
-- [array_append](macros/utils/array_append.sql)
-- [array_construct](macros/utils/array_construct.sql)
-- [array_contains](macros/utils/array_contains.sql)
+### [array_agg](macros/utils/array_agg.sql)
+Adapter specific macro for aggregating a column into an array.
+### [array_append](macros/utils/array_append.sql)
+Adapter specific macro for appending a new value into an array.
+### [array_construct](macros/utils/array_construct.sql)
+Adapter specific macro for constructuring an array from a list of values.
+### [array_contains](macros/utils/array_contains.sql)
+Adapter specific macro to test whether a value is contained within an array.
