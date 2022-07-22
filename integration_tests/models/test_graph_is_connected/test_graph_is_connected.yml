@@ -5,13 +5,13 @@ models:
     description: Unit test (of a connected graph) to validate that test_graph_is_connected passes
     tests:
       - dbt_graph_theory.graph_is_connected:
-          edge_id: 'id'
-          vertex_1: 'vertex_1'
-          vertex_2: 'vertex_2'
+          edge_id: id
+          vertex_1: vertex_1
+          vertex_2: vertex_2
   - name: test_graph_is_connected_graph_id
     description: Unit test (of 3 connected graphs with graph_id defined) to validate that test_graph_is_connected passes
     tests:
       - dbt_graph_theory.graph_is_connected:
-          edge_id: 'id'
-          vertex_1: 'vertex_1'
-          vertex_2: 'vertex_2'
+          edge_id: id
+          vertex_1: vertex_1
+          vertex_2: vertex_2
