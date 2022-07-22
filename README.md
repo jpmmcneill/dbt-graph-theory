@@ -7,6 +7,97 @@
 
 A DBT package designed to help SQL based analysis of graphs.
 
+A [graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)) is a structure defined by a set of vertices and edges.
+
+```mermaid
+flowchart
+  A---B
+  A---C
+  B---C
+  C---D
+  B---E
+  E---F
+  A---F
+```
+
+The above is a graph with vertices {A, B, C, D, E, F}, and edges described by the lines between vertices. In the context of this package, this graph is represented by the SQL table:
+
+| edge_id | vertex_1 | vertex_2 |
+|:-------:|:--------:|:--------:|
+|    1    |     A    |     B    |
+|    2    |     A    |     C    |
+|    3    |     B    |     C    |
+|    4    |     C    |     D    |
+|    5    |     B    |     E    |
+|    6    |     E    |     F    |
+|    7    |     A    |     F    |
+
+In table representation, null vertices represent vertices that are not connected to any other vertices.
+
+The following tables:
+
+| edge_id | vertex_1 | vertex_2 |
+|:-------:|:--------:|:--------:|
+|    1    |     A    |          |
+|    2    |     B    |     C    |
+
+| edge_id | vertex_1 | vertex_2 |
+|:-------:|:--------:|:--------:|
+|    1    |          |     A    |
+|    2    |     B    |     C    |
+
+are equivalent to:
+
+```mermaid
+flowchart
+  A
+  B---C
+```
+
+In this package, all rows are considered - meaning that the following tables are equivalent:
+
+| edge_id | vertex_1 | vertex_2 |
+|:-------:|:--------:|:--------:|
+|    1    |          |     A    |
+|    2    |     A    |          |
+|    3    |          |          |
+|    4    |     A    |     B    |
+
+| edge_id | vertex_1 | vertex_2 |
+|:-------:|:--------:|:--------:|
+|    1    |     A    |     B    |
+
+This package also supports multiple graphs being represented in the same table:
+
+| graph_id | edge_id | vertex_1 | vertex_2 |
+|:--------:|:-------:|:--------:|:--------:|
+|     1    |    1    |     A    |     B    |
+|     1    |    2    |     A    |     C    |
+|     1    |    3    |     B    |     C    |
+|     1    |    4    |     C    |     D    |
+|     2    |    1    |    A'    |    B'    |
+|     2    |    2    |    B'    |    C'    |
+|     2    |    3    |    C'    |    D'    |
+
+```mermaid
+flowchart
+  subgraph 1
+  A---B
+  A---C
+  B---C
+  C---D
+  end
+  subgraph 2
+  A'---B'
+  B'---C'
+  C'---D'
+  end
+```
+
+While in the example above no vertices were shared between graphs, this is not a strict requirement.
+
+`edge_id` should be unique over the table (when `graph_id` is not defined) or at a `graph_id` level when `graph_id` is defined.
+
 ----
 ## Variables
 
@@ -95,7 +186,7 @@ All CI models are required to run and pass tests for a merge to be allowed.
   - [graph_is_connected](#graph_is_connected)
 
 **[Macros](#macros)**
-  - [subgraph_identifier](#subgraph_identifier)
+  - [largest_connected_subgraph_identifier](#largest_connected_subgraph_identifier)
 
 **[Helper Macros](#helper-macros)**
   - [array_agg](#array_agg)
@@ -105,11 +196,100 @@ All CI models are required to run and pass tests for a merge to be allowed.
 ## Generic Tests
 
 ### [graph_is_connected](tests/generic/graph_is_connected.sql)
-Tests whether the give graph is connected or not.
+
+Arguments:
+- edge_id: the name of the field for the edge_id column in the given table graph representation.
+- vertex_1: the name of the field for the vertex_1 column in the given table graph representation.
+- vertex_2: the name of the field for the vertex_2 column in the given table graph representation.
+- graph_id [Optional, text]: the name of the field for the graph_id column in the given table graph representation.
+
+Usage:
+```yaml
+models:
+  - name: <model_name>
+    tests:
+      - dbt_graph_theory.graph_is_connected:
+          graph_id: ...
+          edge_id: ...
+          vertex_1: ...
+          vertex_2: ...
+```
+
+Tests whether the given model (a table representation of a graph) is connected. A connected graph is defined as one where a path exists between any two nodes. As an example, the below graph is not connected:
+
+```mermaid
+flowchart
+  A---B
+  B---C
+  D---E
+  E---F
+  D---F
+  E---G
+```
 
 ## Macros
-### [subgraph_identifier](macros/subgraph_identifier.sql)
-Macro is documented in it's docstring - see the raw code.
+### [largest_connected_subgraph_identifier](macros/largest_connected_subgraph_identifier.sql)
+
+Arguments:
+- input: the input model (inputted as `ref(...)`) or CTE (inputted as a string) with
+- edge_id: the name of the field for the edge_id column in the given table graph representation.
+- vertex_1: the name of the field for the vertex_1 column in the given table graph representation.
+- vertex_2: the name of the field for the vertex_2 column in the given table graph representation.
+- graph_id [Optional, text]: the name of the field for the graph_id column in the given table graph representation.
+
+Usage:
+```sql
+with subgraphs as (
+    {{ dbt_graph_theory.largest_connected_subgraph_identifier(
+        input=ref('example_model'),
+        edge_id='edge_id_field_name',
+        vertex_1='vertex_1_field_name',
+        vertex_2='vertex_2_field_name',
+        graph_id='graph_id_field_name'
+    ) }}
+)
+...
+```
+
+```sql
+...
+subgraphs as (
+    {{ dbt_graph_theory.largest_connected_subgraph_identifier(
+        input='example_cte',
+        edge_id='different_edge_id_field_name',
+        vertex_1='different_vertex_1_field_name',
+        vertex_2='different_vertex_2_field_name'
+    ) }}
+)
+...
+```
+
+This macro groups vertices into the largest connected subgraph that they are a member of.
+
+In the below graph:
+
+```mermaid
+flowchart
+  A---B
+  B---C
+  D---E
+  E---F
+  D---F
+  E---G
+```
+
+The following table is returned:
+
+| edge_id | vertex_1 | vertex_2 | subgraph_id |  subgraph_members  |
+|:-------:|:--------:|:--------:|:-----------:|:------------------:|
+|    1    |     A    |     B    |      1      |  ['A', 'B', 'C']   |
+|    2    |     B    |     C    |      1      |  ['A', 'B', 'C']   |
+|    3    |     D    |     E    |      2      |['D', 'E', 'F', 'G']|
+|    4    |     E    |     F    |      2      |['D', 'E', 'F', 'G']|
+|    5    |     D    |     F    |      2      |['D', 'E', 'F', 'G']|
+|    6    |     E    |     G    |      2      |['D', 'E', 'F', 'G']|
+
+subgraph_id is designed to be unique to both the graph and subgraph level. 
 
 ## Helper Macros
 Note that the below are designed for internal (ie. dbt-graph-theory) use only. Use them at your own risk!
