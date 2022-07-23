@@ -1,41 +1,41 @@
 version: 2
 models:
-  - name: test_subgraph_identifier_1_subgraph
+  - name: test_largest_conn_subgraph_1_subgraph
     description: Unit test checking a situation with 1 subgraph and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_4_subgraph
+  - name: test_largest_conn_subgraph_4_subgraph
     description: Unit test checking a situation with 4 subgraphs and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_2_subgraph_no_edge
+  - name: test_largest_conn_subgraph_2_subgraph_no_edge
     description: Unit test checking a situation with 1 subgraph, no connecting edges and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_3_subgraph_no_edge
+  - name: test_largest_conn_subgraph_3_subgraph_no_edge
     description: Unit test checking a situation with 3 subgraphs, no connecting edges and no graph_id.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_graph_id
+  - name: test_largest_conn_subgraph_graph_id
     description: Unit test checking a situation with 2 graph ids, one with two subgraphs and one with 1 subgraph.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_graph_id_3_subgraph
+  - name: test_largest_conn_subgraph_graph_id_3_subgraph
     description: Unit test checking a situation with 2 graph ids, with three subgraphs each.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_no_data
+  - name: test_largest_conn_subgraph_no_data
     description: Unit test checking a situation no data.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
           value: 0
-  - name: test_subgraph_identifier_no_data_graph_id
+  - name: test_largest_conn_subgraph_no_data_graph_id
     description: Unit test checking a situation no data but with graph_id defined.
     tests:
       - dbt_expectations.expect_table_row_count_to_equal:
