@@ -5,7 +5,7 @@ with computed as (
 ),
 
 subgraph_members as (
-    select * from (
+    select v.* from (
         values
         (1, 'A', 'B', '1', array['A', 'B', 'C', 'D']),
         (2, 'B', 'C', '1', array['A', 'B', 'C', 'D']),
@@ -14,7 +14,11 @@ subgraph_members as (
         (5, 'E', 'F', '2', array['E', 'F']),
         (6, 'G', null, '3', array['G']),
         (7, 'H', 'I', '4', array['H', 'I'])
-    )
+    ) as v
 )
 
-select * from {{ cte_difference('computed', 'subgraph_members', fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]) }}
+select * from {{ cte_difference(
+    'computed',
+    'subgraph_members',
+    fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]
+) }}

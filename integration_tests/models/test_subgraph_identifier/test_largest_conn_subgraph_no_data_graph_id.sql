@@ -6,11 +6,15 @@ with computed as (
 ),
 
 subgraph_members as (
-    select * from (
+    select v.* from (
         values
         (null::integer, null::integer, null::integer, null::integer, null::text, array[null])
-    )
+    ) as v
     where false
 )
 
-select * from {{ cte_difference('computed', 'subgraph_members', fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]) }}
+select * from {{ cte_difference(
+    'computed',
+    'subgraph_members',
+    fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]
+) }}

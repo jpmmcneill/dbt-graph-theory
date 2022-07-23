@@ -17,11 +17,15 @@ recast_computed as (
 ),
 
 subgraph_members as (
-    select * from (
+    select v.* from (
         values
         (1, 'A', null, '1', array['A']),
         (2, 'B', null, '2', array['B'])
-    )
+    ) as v
 )
 
-select * from {{ cte_difference('recast_computed', 'subgraph_members', fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]) }}
+select * from {{ cte_difference(
+    'recast_computed',
+    'subgraph_members',
+    fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]
+) }}
