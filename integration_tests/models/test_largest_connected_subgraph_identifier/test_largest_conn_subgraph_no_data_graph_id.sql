@@ -9,7 +9,7 @@ subgraph_members as (
     select v.* from (
         values
         (null::integer, null::integer, null::integer, null::integer, null::text, array[null])
-    ) as v
+    ) as v (id, vertex_1, vertex_2, subgraph_id, subgraph_members)
     where false
 )
 

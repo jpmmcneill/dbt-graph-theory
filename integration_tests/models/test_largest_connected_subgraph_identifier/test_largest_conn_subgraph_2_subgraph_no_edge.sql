@@ -21,7 +21,7 @@ subgraph_members as (
         values
         (1, 'A', null, '1', array['A']),
         (2, 'B', null, '2', array['B'])
-    ) as v
+    ) as v (id, vertex_1, vertex_2, subgraph_id, subgraph_members)
 )
 
 select * from {{ cte_difference(
