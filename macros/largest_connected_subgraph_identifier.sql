@@ -39,7 +39,7 @@
 
     with recursive rename_input as (
         select
-            {{ graph_id if graph_id else '1'}}::text as graph_id,
+            {{ graph_id if graph_id else '1' }}::text as graph_id,
             {{ edge_id }}::text as id,
             {{ vertex_1 }}::text as vertex_1,
             {{ vertex_2 }}::text as vertex_2
@@ -154,7 +154,7 @@
         select
             _input.*,
             concat(
-                {{ '_input.'~graph_id if graph_id else "''"}},
+                {{ '_input.'~graph_id if graph_id else "''" }},
                 {{ "'__'," if graph_id }}
                 subgraphs.subgraph_id
             ) as subgraph_id,

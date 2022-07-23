@@ -1,0 +1,17 @@
+[sqlfluff]
+templater = dbt
+dialect = postgres
+
+[sqlfluff:templater:dbt]
+profiles_dir = ci_profiles
+profile = integration_tests
+target = ci
+
+[sqlfluff:rules]
+tab_space_size = 4
+max_line_length = 100
+indent_unit = space
+comma_style = trailing
+
+[sqlfluff:rules:L010]
+capitalisation_policy = lower
