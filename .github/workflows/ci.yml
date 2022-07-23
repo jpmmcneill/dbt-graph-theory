@@ -5,9 +5,9 @@ defaults:
     working-directory: integration_tests
 on: [push]
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    name: Build
+    name: Test
     services:
       postgres:
         image: postgres:14.0-alpine
@@ -28,10 +28,26 @@ jobs:
       - name: Setup python venv
         uses: syphar/restore-virtualenv@v1
       - name: Install dbt
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-test.txt
       - name: Run dbt deps
         run: dbt deps
       - name: Run dbt seed
         run: dbt seed --profiles-dir ci_profiles
       - name: Run dbt models & tests
         run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Setup python venv
+        uses: syphar/restore-virtualenv@v1
+      - name: Install sqlfluff
+        run: pip install -r requirements-lint.txt
+      - name: Run sqlfluff
+        run: sqlfluff lint

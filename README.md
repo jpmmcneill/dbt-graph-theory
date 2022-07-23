@@ -117,7 +117,8 @@ To set up a python3 virtual environment, run the following in order from the `in
 ```
 python3 -m venv ci_venv
 source ci_venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-test.txt
+pip install -r requirements-lint.txt
 ```
 
 To exit the virtual environment, simply run:
