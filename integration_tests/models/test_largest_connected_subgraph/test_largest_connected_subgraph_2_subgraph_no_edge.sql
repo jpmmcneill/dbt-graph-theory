@@ -7,9 +7,7 @@ with computed as (
 -- recast because vertex_2 is all null in seed data, interpreted as int dtype
 recast_computed as (
     select
-        id,
-        vertex_1,
-        vertex_2::text as vertex_2,
+        vertex::text as vertex,
         subgraph_id,
         subgraph_members
     from
@@ -19,13 +17,13 @@ recast_computed as (
 subgraph_members as (
     select v.* from (
         values
-        (1, 'A', null, '1', array['A']),
-        (2, 'B', null, '2', array['B'])
-    ) as v (id, vertex_1, vertex_2, subgraph_id, subgraph_members)
+        ('A', '1', array['A']),
+        ('B', '2', array['B'])
+    ) as v (vertex, subgraph_id, subgraph_members)
 )
 
 select * from {{ cte_difference(
     'recast_computed',
     'subgraph_members',
-    fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]
+    fields=["vertex", "subgraph_id", "subgraph_members"]
 ) }}

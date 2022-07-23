@@ -7,13 +7,13 @@ with computed as (
 subgraph_members as (
     select v.* from (
         values
-        (null::integer, null::integer, null::integer, null::text, array[null])
-    ) as v (id, vertex_1, vertex_2, subgraph_id, subgraph_members)
+        (null::text, null::text, array[null])
+    ) as v (vertex, subgraph_id, subgraph_members)
     where false
 )
 
 select * from {{ cte_difference(
     'computed',
     'subgraph_members',
-    fields=["id", "vertex_1", "vertex_2", "subgraph_id", "subgraph_members"]
+    fields=["vertex", "subgraph_id", "subgraph_members"]
 ) }}

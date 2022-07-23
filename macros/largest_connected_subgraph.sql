@@ -151,16 +151,23 @@
     ),
 
     largest_connected_subgraphs as (
-        select
-            {{ graph_id ~ ',' if graph_id }}
-            vertex,
+        -- join in the input to preserve data types on graph_id and vertex.
+        select distinct
+            {{ '_input.' ~ graph_id ~ ',' if graph_id }}
+            _output.vertex,
             concat(
-                {{ '_input.'~graph_id if graph_id else "''" }},
+                {{ '_output.graph_id' if graph_id else "''" }},
                 {{ "'__'," if graph_id }}
                 subgraph_id
             ) as subgraph_id,
             subgraph_members
-        from generate_subgraph_id
+        from generate_subgraph_id as _output
+        left join {{ input }} as _input on
+            (
+                _output.vertex = _input.{{ vertex_1 }}::text or
+                _output.vertex = _input.{{ vertex_2 }}::text
+            )
+            {{ 'and _output.graph_id = _input.' ~ graph_id ~ '::text' if graph_id }}
     )
 
     select * from largest_connected_subgraphs
