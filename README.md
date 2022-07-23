@@ -3,7 +3,7 @@
 [![](https://img.shields.io/static/v1?label=dbt-core&message=1.0.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-core)
 [![](https://img.shields.io/static/v1?label=dbt-utils&message=0.8.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-utils/)
 
-A DBT package designed to help SQL based analysis of graphs.
+A DBT package designed to help SQL based analysis of graphs. This package currently only supports snowflake and postgres versions >= 10.
 
 A [graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)) is a structure defined by a set of vertices and edges.
 
@@ -104,7 +104,9 @@ This package currently has no variables that need to be configured.
 ----
 ## Integration Tests (Developers Only)
 
-This section assumes development on a mac, where python3 & postgresql are installed. While this package supports both snowflake and postgres, only postgres integration tests are currently implemented.
+This section assumes development on a mac, where python3 & postgresql are installed.
+
+At the moment, only postgres integration tests are implemented.
 
 ### Setting up python environment 
 
@@ -235,7 +237,7 @@ Arguments:
 - vertex_2: the name of the field for the vertex_2 column in the given table graph representation.
 - graph_id [Optional, text]: the name of the field for the graph_id column in the given table graph representation.
 
-Usage:
+**Usage:**
 ```sql
 with subgraphs as (
     {{ dbt_graph_theory.largest_connected_subgraph_identifier(
@@ -304,6 +306,7 @@ This is an adapter specific macro for aggregating a column into an array.
 
 This macro excludes nulls, and supports snowflake and postgres.
 
+**Usage:**
 ```sql
 select
     date_month,
@@ -331,6 +334,7 @@ This is an adapter specific macro for appending a new value into an array.
 
 This macro supports snowflake and postgres.
 
+**Usage:**
 ```sql
 select
     {{ dbt_graph_theory.array_append('existing_array', 'new_field_to_append') }} as updated_existing_array
@@ -353,6 +357,7 @@ This is an adapter specific macro for constructuring an array from a list of val
 
 This macro supports snowflake and postgres.
 
+**Usage:**
 ```sql
 {% set list = ['field_one', 'field_two', "'hardcoded_string'"] %}
 select
@@ -377,6 +382,7 @@ This is an adapter specific macro to test whether a value is contained within an
 
 This macro supports snowflake and postgres.
 
+**Usage:**
 ```sql
 select
     {{ dbt_graph_theory.array_contains(array='array_field', value='other_value') }} as value_contained__bool
