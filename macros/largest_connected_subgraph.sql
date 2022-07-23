@@ -1,4 +1,4 @@
-{% macro largest_connected_largest_conn_subgraph(
+{% macro largest_connected_largest_connected_subgraph(
     input,
     edge_id='id',
     vertex_1='vertex_1',
@@ -150,20 +150,25 @@
         from node_subgraphs
     ),
 
-    join_detail as (
-        select
-            _input.*,
+    largest_connected_subgraphs as (
+        -- join in the input to preserve data types on graph_id and vertex.
+        select distinct
+            {{ '_input.' ~ graph_id ~ ',' if graph_id }}
+            _output.vertex,
             concat(
-                {{ '_input.'~graph_id if graph_id else "''" }},
+                {{ '_output.graph_id' if graph_id else "''" }},
                 {{ "'__'," if graph_id }}
-                subgraphs.subgraph_id
+                subgraph_id
             ) as subgraph_id,
-            subgraphs.subgraph_members
-        from {{ input }} as _input
-        left join generate_subgraph_id as subgraphs on
-            coalesce(_input.{{ vertex_1 }}::text, _input.{{ vertex_2 }}::text) = subgraphs.vertex
-            {{ 'and _input.' ~ graph_id ~ '::text = subgraphs.graph_id' if graph_id }}
+            subgraph_members
+        from generate_subgraph_id as _output
+        left join {{ input }} as _input on
+            (
+                _output.vertex = _input.{{ vertex_1 }}::text or
+                _output.vertex = _input.{{ vertex_2 }}::text
+            )
+            {{ 'and _output.graph_id = _input.' ~ graph_id ~ '::text' if graph_id }}
     )
 
-    select * from join_detail
+    select * from largest_connected_subgraphs
 {% endmacro %}
