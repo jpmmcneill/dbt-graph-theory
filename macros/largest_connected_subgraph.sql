@@ -1,4 +1,4 @@
-{% macro largest_connected_largest_conn_subgraph(
+{% macro largest_connected_largest_connected_subgraph(
     input,
     edge_id='id',
     vertex_1='vertex_1',

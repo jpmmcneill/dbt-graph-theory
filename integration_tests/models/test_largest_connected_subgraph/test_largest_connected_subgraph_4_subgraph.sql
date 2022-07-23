@@ -1,6 +1,6 @@
 with computed as (
-    {{ dbt_graph_theory.largest_connected_largest_conn_subgraph(
-        input=ref('test_largest_conn_subgraph_4_subgraph_data')
+    {{ dbt_graph_theory.largest_connected_largest_connected_subgraph(
+        input=ref('test_largest_connected_subgraph_4_subgraph_data')
     ) }}
 ),
 
