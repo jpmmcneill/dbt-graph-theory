@@ -1,5 +1,5 @@
 with computed as (
-    {{ dbt_graph_theory.largest_connected_largest_connected_subgraph(
+    {{ dbt_graph_theory.largest_connected_subgraph(
         input=ref('test_largest_connected_subgraph_4_subgraph_data')
     ) }}
 ),
