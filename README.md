@@ -198,9 +198,9 @@ All CI models are required to run and pass tests for a merge to be allowed.
 ### [graph_is_connected](tests/generic/graph_is_connected.sql)
 
 Arguments:
-- edge_id: the name of the field for the edge_id column in the given table graph representation.
-- vertex_1: the name of the field for the vertex_1 column in the given table graph representation.
-- vertex_2: the name of the field for the vertex_2 column in the given table graph representation.
+- edge_id [text]: the name of the field for the edge_id column in the given table graph representation.
+- vertex_1 [text]: the name of the field for the vertex_1 column in the given table graph representation.
+- vertex_2 [text]: the name of the field for the vertex_2 column in the given table graph representation.
 - graph_id [Optional, text]: the name of the field for the graph_id column in the given table graph representation.
 
 Usage:
@@ -231,7 +231,7 @@ flowchart
 ### [largest_connected_subgraph_identifier](macros/largest_connected_subgraph_identifier.sql)
 
 Arguments:
-- input: the input model (inputted as `ref(...)`) or CTE (inputted as a string) with
+- input: the input node (inputted as `ref(...)` or `source(...)`) or CTE (inputted as a string)
 - edge_id: the name of the field for the edge_id column in the given table graph representation.
 - vertex_1: the name of the field for the vertex_1 column in the given table graph representation.
 - vertex_2: the name of the field for the vertex_2 column in the given table graph representation.
@@ -294,10 +294,93 @@ subgraph_id is designed to be unique to both the graph and subgraph level.
 ## Helper Macros
 Note that the below are designed for internal (ie. dbt-graph-theory) use only. Use them at your own risk!
 ### [array_agg](macros/utils/array_agg.sql)
-Adapter specific macro for aggregating a column into an array.
+
+Arguments:
+
+- field [text]: the field to be aggregated into an array (inputted as `'field_name'`).
+- distinct [optional, bool]: whether the aggregation should only include distinct values (inputted as `true/false`). Defaults to `false`.
+- order_field [optional, text]: the field that the array elements should be ordered by (inputted as `'field_name'`). Defaults to `none`.
+- order [optional, text]: the ordering that the order_field should be ordered by (inputted as `'field_name'`). Defaults to `none`.
+
+This is an adapter specific macro for aggregating a column into an array.
+
+This macro excludes nulls, and supports snowflake and postgres.
+
+```sql
+select
+    date_month,
+    {{ dbt_graph_theory.array_agg(field='customer_id') }} as customer_array
+from {{ ref('model') }}
+group by date_month
+```
+
+```sql
+select
+    date_month,
+    {{ dbt_graph_theory.array_agg(field='customer_id', distinct=true, order_field='num_orders') }} as customer_array
+from {{ ref('model') }}
+group by date_month
+```
+
 ### [array_append](macros/utils/array_append.sql)
-Adapter specific macro for appending a new value into an array.
+
+Arguments:
+
+- array [text]: the array field where new values should be appended into (inputted as `'field_name'`).
+- new_value [text]: the field (or value) to be appended to the existing array(inputted as `'field_name'` or `'value'`).
+
+This is an adapter specific macro for appending a new value into an array.
+
+This macro supports snowflake and postgres.
+
+```sql
+select
+    {{ dbt_graph_theory.array_append('existing_array', 'new_field_to_append') }} as updated_existing_array
+from {{ ref('model') }}
+```
+
+```sql
+select
+    {{ dbt_graph_theory.array_append('existing_array', "'a_hardcoded_string'") }} as updated_existing_array
+from {{ ref('model') }}
+```
+
 ### [array_construct](macros/utils/array_construct.sql)
-Adapter specific macro for constructuring an array from a list of values.
+
+Arguments:
+
+- components [list[text]]: the jinja list which will be used (in order) for the array's construction.
+
+This is an adapter specific macro for constructuring an array from a list of values.
+
+This macro supports snowflake and postgres.
+
+```sql
+{% set list = ['field_one', 'field_two', "'hardcoded_string'"] %}
+select
+    {{ dbt_graph_theory.array_construct(components=list) }} as constructed_array
+from {{ ref('model') }}
+```
+
+```sql
+select
+    {{ dbt_graph_theory.array_construct(components=['1', 'a_field']) }} as constructed_array
+from {{ ref('model') }}
+```
+
 ### [array_contains](macros/utils/array_contains.sql)
-Adapter specific macro to test whether a value is contained within an array.
+
+Arguments:
+
+- array [text]: the array field which will be checked for inclusion of the given value.
+- value [text]: the field (or hardcoded data) which is checked for in the given array.
+
+This is an adapter specific macro to test whether a value is contained within an array.
+
+This macro supports snowflake and postgres.
+
+```sql
+select
+    {{ dbt_graph_theory.array_contains(array='array_field', value='other_value') }} as value_contained__bool
+from {{ ref('model') }}
+```
