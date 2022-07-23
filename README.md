@@ -290,16 +290,17 @@ flowchart
 
 The following table is returned:
 
-| edge_id | vertex_1 | vertex_2 | subgraph_id |  subgraph_members  |
-|:-------:|:--------:|:--------:|:-----------:|:------------------:|
-|    1    |     A    |     B    |      1      |  ['A', 'B', 'C']   |
-|    2    |     B    |     C    |      1      |  ['A', 'B', 'C']   |
-|    3    |     D    |     E    |      2      |['D', 'E', 'F', 'G']|
-|    4    |     E    |     F    |      2      |['D', 'E', 'F', 'G']|
-|    5    |     D    |     F    |      2      |['D', 'E', 'F', 'G']|
-|    6    |     E    |     G    |      2      |['D', 'E', 'F', 'G']|
+|  vertex  | subgraph_id |  subgraph_members  |
+|:--------:|:-----------:|:------------------:|
+|     A    |      1      |  ['A', 'B', 'C']   |
+|     B    |      1      |  ['A', 'B', 'C']   |
+|     C    |      2      |['D', 'E', 'F', 'G']|
+|     D    |      2      |['D', 'E', 'F', 'G']|
+|     E    |      2      |['D', 'E', 'F', 'G']|
+|     F    |      2      |['D', 'E', 'F', 'G']|
+|     G    |      2      |['D', 'E', 'F', 'G']|
 
-subgraph_id is designed to be unique to both the graph and subgraph level. 
+subgraph_id is designed to be unique to both the graph and subgraph level. When graph_id is defined, the output is also at a graph_id level.
 
 ## Helper Macros
 Note that the below are designed for internal (ie. dbt-graph-theory) use only. Use them at your own risk!

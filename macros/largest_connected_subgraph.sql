@@ -150,20 +150,18 @@
         from node_subgraphs
     ),
 
-    join_detail as (
+    largest_connected_subgraphs as (
         select
-            _input.*,
+            {{ graph_id ~ ',' if graph_id }}
+            vertex,
             concat(
                 {{ '_input.'~graph_id if graph_id else "''" }},
                 {{ "'__'," if graph_id }}
-                subgraphs.subgraph_id
+                subgraph_id
             ) as subgraph_id,
-            subgraphs.subgraph_members
-        from {{ input }} as _input
-        left join generate_subgraph_id as subgraphs on
-            coalesce(_input.{{ vertex_1 }}::text, _input.{{ vertex_2 }}::text) = subgraphs.vertex
-            {{ 'and _input.' ~ graph_id ~ '::text = subgraphs.graph_id' if graph_id }}
+            subgraph_members
+        from generate_subgraph_id
     )
 
-    select * from join_detail
+    select * from largest_connected_subgraphs
 {% endmacro %}
