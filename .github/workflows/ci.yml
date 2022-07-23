@@ -36,4 +36,4 @@ jobs:
       - name: Run dbt models & tests
         run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles
       - name: Run sqlfluff
-        run: sqlfluff lint
+        run: sqlfluff lint -v
