@@ -3,8 +3,6 @@
 [![](https://img.shields.io/static/v1?label=dbt-core&message=1.0.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-core)
 [![](https://img.shields.io/static/v1?label=dbt-utils&message=0.8.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-utils/)
 
-**Note**: README structure inspired by dbt-date and dbt-expectations.
-
 A DBT package designed to help SQL based analysis of graphs.
 
 A [graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)) is a structure defined by a set of vertices and edges.
@@ -384,3 +382,5 @@ select
     {{ dbt_graph_theory.array_contains(array='array_field', value='other_value') }} as value_contained__bool
 from {{ ref('model') }}
 ```
+
+**Note**: README structure inspired by dbt-lab's [dbt-utils](https://github.com/dbt-labs/dbt-utils) and calogica's [dbt-date](https://github.com/calogica/dbt-date) and [dbt-expectations](https://github.com/calogica/dbt-expectations).
