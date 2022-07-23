@@ -117,8 +117,7 @@ To set up a python3 virtual environment, run the following in order from the `in
 ```
 python3 -m venv ci_venv
 source ci_venv/bin/activate
-pip install -r requirements-test.txt
-pip install -r requirements-lint.txt
+pip install -r requirements.txt
 ```
 
 To exit the virtual environment, simply run:
@@ -179,6 +178,16 @@ quit -- to end the server connection
 ```
 
 All CI models are required to run and pass tests for a merge to be allowed.
+
+### Running sqlfluff
+
+This package is linted by sqlfluff. To run this linter, simply run:
+
+```
+sqlfluff lint -v
+```
+
+from the integration_tests folder. sqlfluff does not currently support macros, meaning that only models in the integration_tests folder are linted.
 
 ----
 ## Contents
