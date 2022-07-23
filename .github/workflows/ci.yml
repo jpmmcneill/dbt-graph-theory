@@ -27,8 +27,8 @@ jobs:
           python-version: '3.9'
       - name: Setup python venv
         uses: syphar/restore-virtualenv@v1
-      - name: Install dbt
-        run: pip install -r requirements-test.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Run dbt deps
         run: dbt deps
       - name: Run dbt seed
@@ -47,7 +47,9 @@ jobs:
           python-version: '3.9'
       - name: Setup python venv
         uses: syphar/restore-virtualenv@v1
-      - name: Install sqlfluff
-        run: pip install -r requirements-lint.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run dbt deps (required for sqlfluff)
+        run: dbt deps
       - name: Run sqlfluff
         run: sqlfluff lint
