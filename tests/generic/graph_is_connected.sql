@@ -7,7 +7,7 @@
 ) %}
 
 with connected_subgraphs as (
-    {{ dbt_graph_theory.largest_connected_largest_connected_subgraph(
+    {{ dbt_graph_theory.largest_connected_subgraph(
         input=model,
         edge_id=edge_id,
         vertex_1=vertex_1,
