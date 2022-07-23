@@ -92,7 +92,7 @@ flowchart
   end
 ```
 
-While in the example above no vertices were shared between graphs, this is not a strict requirement.
+While in the example above no vertex labels were shared between different `graph_id`s, this is not a strict requirement. When a vertex is shared between two `graph_id`s, the vertices are considered seperate (ie. all algorithms are performed on the graph_id level).
 
 `edge_id` should be unique over the table (when `graph_id` is not defined) or at a `graph_id` level when `graph_id` is defined.
 
