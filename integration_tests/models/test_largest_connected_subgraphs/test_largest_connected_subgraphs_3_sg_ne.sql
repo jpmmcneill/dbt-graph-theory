@@ -1,15 +1,16 @@
 with computed as (
-    {{ dbt_graph_theory.largest_connected_subgraph(
-        input=ref('test_largest_connected_subgraph_no_data_data')
+    {{ dbt_graph_theory.largest_connected_subgraphs(
+        input=ref('test_largest_connected_subgraphs_3_sg_ne_data')
     ) }}
 ),
 
 subgraph_members as (
     select v.* from (
         values
-        (null::text, null::text, array[null])
+        ('A', '1', array['A']),
+        ('B', '2', array['B']),
+        ('C', '3', array['C'])
     ) as v (vertex, subgraph_id, subgraph_members)
-    where false
 )
 
 select * from {{ cte_difference(

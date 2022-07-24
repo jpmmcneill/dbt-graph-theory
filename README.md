@@ -196,7 +196,7 @@ from the integration_tests folder. sqlfluff does not currently support macros, m
   - [graph_is_connected](#graph_is_connected)
 
 **[Macros](#macros)**
-  - [largest_connected_subgraph](#largest_connected_subgraph)
+  - [largest_connected_subgraphs](#largest_connected_subgraphs)
 
 **[Helper Macros](#helper-macros)**
   - [array_agg](#array_agg)
@@ -238,7 +238,7 @@ flowchart
 ```
 
 ## Macros
-### [largest_connected_subgraph](macros/largest_connected_subgraph.sql)
+### [largest_connected_subgraphs](macros/largest_connected_subgraphs.sql)
 
 Arguments:
 - input: the input node (inputted as `ref(...)` or `source(...)`) or CTE (inputted as a string)
@@ -250,7 +250,7 @@ Arguments:
 **Usage:**
 ```sql
 with subgraphs as (
-    {{ dbt_graph_theory.largest_connected_subgraph(
+    {{ dbt_graph_theory.largest_connected_subgraphs(
         input=ref('example_model'),
         edge_id='edge_id_field_name',
         vertex_1='vertex_1_field_name',
@@ -264,7 +264,7 @@ with subgraphs as (
 ```sql
 ...
 subgraphs as (
-    {{ dbt_graph_theory.largest_connected_subgraph(
+    {{ dbt_graph_theory.largest_connected_subgraphs(
         input='example_cte',
         edge_id='different_edge_id_field_name',
         vertex_1='different_vertex_1_field_name',
