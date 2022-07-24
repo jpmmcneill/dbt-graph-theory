@@ -1,4 +1,4 @@
-{% macro largest_connected_subgraph(
+{% macro largest_connected_subgraphs(
     input,
     edge_id='id',
     vertex_1='vertex_1',
@@ -150,7 +150,7 @@
         from node_subgraphs
     ),
 
-    largest_connected_subgraphs as (
+    largest_connected_subgraphss as (
         -- join in the input to preserve data types on graph_id and vertex.
         select distinct
             {{ '_input.' ~ graph_id ~ ',' if graph_id }}
@@ -170,5 +170,5 @@
             {{ 'and _output.graph_id = _input.' ~ graph_id ~ '::text' if graph_id }}
     )
 
-    select * from largest_connected_subgraphs
+    select * from largest_connected_subgraphss
 {% endmacro %}
