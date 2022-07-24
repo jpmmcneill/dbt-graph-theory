@@ -154,7 +154,10 @@
         -- join in the input to preserve data types on graph_id and vertex.
         select distinct
             {{ '_input.' ~ graph_id ~ ',' if graph_id }}
-            _output.vertex,
+            case
+                when _input.{{ vertex_1 }}::text = _output.vertex then _input.{{ vertex_1 }}
+                when _input.{{ vertex_2 }}::text = _output.vertex then _input.{{ vertex_2 }}
+            end as vertex,
             concat(
                 {{ '_output.graph_id' if graph_id else "''" }},
                 {{ "'__'," if graph_id }}
@@ -162,7 +165,7 @@
             ) as subgraph_id,
             subgraph_members
         from generate_subgraph_id as _output
-        left join {{ input }} as _input on
+        inner join {{ input }} as _input on
             (
                 _output.vertex = _input.{{ vertex_1 }}::text or
                 _output.vertex = _input.{{ vertex_2 }}::text
