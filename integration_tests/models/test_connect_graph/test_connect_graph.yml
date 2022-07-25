@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: test_connect_ordered_graph_2_sg
+    description: Unit test checking a situation with 2 subgraphs of an ordered graph being connected.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
