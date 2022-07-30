@@ -20,28 +20,39 @@ with subgraphs as (
     ) }}
 ),
 
+enforce_graph_types as (
+    select
+        {{ graph_id if graph_id else '1::text'}}::text as graph_id,
+        {{ edge_id }}::text as edge_id,
+        {{ vertex_1 }}::text as vertex_1,
+        {{ vertex_2 }}::text as vertex_2,
+        {{ ordering_field }} as ordering
+    from
+        {{ input }}
+),
+
 from_vertices as (
     select
-        {{ '_input.' ~ graph_id if graph_id else '1' }}::text as graph_id,
-        _input.{{ vertex_1 }} as vertex,
-        _input.{{ ordering_field }} as ordering,
+        _input.graph_id,
+        _input.vertex_1 as vertex,
+        _input.ordering,
         subgraphs.subgraph_id
-    from {{ input }} as _input
+    from enforce_graph_types as _input
     inner join subgraphs on
-        {{ 'subgraphs.' ~ graph_id ~ ' = ' ~ '_input.' ~ graph_id ~ ' and' if graph_id }}
-        _input.{{ vertex_1 }} = subgraphs.vertex
+        _input.graph_id = subgraphs.graph_id and
+        _input.vertex_1 = subgraphs.vertex
 ),
 
 to_vertices as (
     select
-        {{ '_input.' ~ graph_id if graph_id else '1' }}::text as graph_id,
-        _input.{{ vertex_2 }} as vertex,
-        _input.{{ ordering_field }} as ordering,
+        _input.graph_id,
+        _input.vertex_2 as vertex,
+        _input.ordering,
         subgraphs.subgraph_id
-    from {{ input }} as _input
+    from enforce_graph_types as _input
     inner join subgraphs on
-        {{ 'subgraphs.' ~ graph_id ~ ' = ' ~ '_input.' ~ graph_id ~ ' and' if graph_id }}
-        _input.{{ vertex_2 }} = subgraphs.vertex
+        _input.graph_id = subgraphs.graph_id and
+        _input.vertex_2 = subgraphs.vertex
 ),
 
 vertex_ordering as (
@@ -72,7 +83,7 @@ vertex_min_max_ordering as (
 
 subgraph_max_min_ordering as (
     select
-        {{ 'subgraphs.' ~ graph_id if graph_id else '1' }}::text as graph_id,
+        subgraphs.graph_id,
         subgraphs.subgraph_id,
         subgraphs.subgraph_members,
         min(orderings.min_ordering) as min_ordering,
@@ -81,10 +92,10 @@ subgraph_max_min_ordering as (
         subgraphs
     inner join
         vertex_min_max_ordering as orderings on
-            {{ 'subgraphs.' ~ graph_id if graph_id else '1' }}::text = orderings.graph_id and
-            subgraphs.vertex::text = orderings.vertex
+            subgraphs.graph_id = orderings.graph_id and
+            subgraphs.vertex = orderings.vertex
     group by
-        {{ 'subgraphs.' ~ graph_id if graph_id else '1' }}::text,
+        subgraphs.graph_id,
         subgraphs.subgraph_id,
         subgraphs.subgraph_members
 ),
@@ -131,16 +142,16 @@ new_edges_join as (
 
 include_new_edges as (
     select
-        {{ graph_id ~ ' as ' ~ graph_id ~ '::text,' if graph_id }}
-        {{ edge_id }}::text as {{ edge_id }},
-        {{ ordering_field }},
-        {{ vertex_1 }},
-        {{ vertex_2 }}
-    from {{ input }}
+        {{ 'graph_id as ' ~ graph_id ~ ',' if graph_id }}
+        edge_id as {{ edge_id }},
+        ordering as {{ ordering_field }},
+        vertex_1 as {{ vertex_1 }}, 
+        vertex_2 as {{ vertex_2 }}
+    from enforce_graph_types
     union all
     select
-        {{ 'graph_id as ' ~ graph_id ~ '::text,' if graph_id }}
-        concat('inserted_edge_', row_number() over (order by {{ 'graph_id,' if graph_id }} vertex_1)::text) as {{ edge_id }},
+        {{ 'graph_id as ' ~ graph_id ~ ',' if graph_id }}
+        concat('inserted_edge_', row_number() over (order by graph_id, vertex_1)::text) as {{ edge_id }},
         {% if ordering_type == 'timestamp' %}
         case
             when

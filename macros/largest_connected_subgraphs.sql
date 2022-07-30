@@ -37,65 +37,64 @@
         graph_id (text, Optional, default = None): The field corresponding to the graph_id field described above.
     #}
 
-    with recursive rename_input as (
-        select
-            {{ graph_id if graph_id else '1' }}::text as graph_id,
-            {{ edge_id }}::text as id,
-            {{ vertex_1 }}::text as vertex_1,
-            {{ vertex_2 }}::text as vertex_2
-        from
-            {{ input }}
+    with recursive enforce_graph as (
+        {{ dbt_graph_theory.enforce_graph_structure(
+            input,
+            vertex_1=vertex_1,
+            vertex_2=vertex_2,
+            graph_id=graph_id
+        )}}
     ),
     
-    all_vertexs as (
+    all_vertices as (
         select
-            graph_id,
-            vertex_1 as vertex
-        from rename_input
-        where vertex_1 is not null
+            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ vertex_1 }} as vertex
+        from enforce_graph
+        where {{ vertex_1 }} is not null
         union
         select
-            graph_id,
-            vertex_2 as vertex
-        from rename_input
-        where vertex_2 is not null
+            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ vertex_2 }} as vertex
+        from enforce_graph
+        where {{ vertex_2 }} is not null
     ),
 
     {# enforce bi-directional edges #}
     all_edges as (
         select
-            graph_id,
-            vertex_1,
-            vertex_2
+            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ vertex_1 }} as vertex_1,
+            {{ vertex_2 }} as vertex_2
         from
-            rename_input
+            enforce_graph
         where
-            coalesce(vertex_1 != vertex_2, true) and
-            (vertex_1 is not null or vertex_2 is not null)
+            coalesce({{ vertex_1 }} != {{ vertex_2 }}, true) and
+            ({{ vertex_1 }} is not null or {{ vertex_2 }} is not null)
         union
         select
-            graph_id,
-            vertex_2 as vertex_1,
-            vertex_1 as vertex_2
+            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ vertex_2 }} as vertex_1,
+            {{ vertex_1 }} as vertex_2
         from
-            rename_input
+            enforce_graph
         where
-            coalesce(vertex_1 != vertex_2, true) and
-            (vertex_1 is not null or vertex_2 is not null)
+            coalesce({{ vertex_1 }} != {{ vertex_2 }}, true) and
+            ({{ vertex_1 }} is not null or {{ vertex_2 }} is not null)
     ),
 
     graph_walk as (
         select
-            all_vertexs.graph_id,
-            all_vertexs.vertex as orig_vertex,
+            all_vertices.graph_id,
+            all_vertices.vertex as orig_vertex,
             all_edges.vertex_1,
             all_edges.vertex_2,
             {{ dbt_graph_theory.array_construct(components=['all_edges.vertex_1', 'all_edges.vertex_2']) }} as path_array
         from 
             all_edges
-        inner join all_vertexs on
-            all_vertexs.graph_id = all_edges.graph_id and
-            all_vertexs.vertex = all_edges.vertex_1
+        inner join all_vertices on
+            all_vertices.graph_id = all_edges.graph_id and
+            all_vertices.vertex = all_edges.vertex_1
         union all
         select
             graph_walk.graph_id,
@@ -151,26 +150,16 @@
     ),
 
     largest_connected_subgraphss as (
-        -- join in the input to preserve data types on graph_id and vertex.
         select distinct
-            {{ '_input.' ~ graph_id ~ ',' if graph_id }}
-            case
-                when _input.{{ vertex_1 }}::text = _output.vertex then _input.{{ vertex_1 }}
-                when _input.{{ vertex_2 }}::text = _output.vertex then _input.{{ vertex_2 }}
-            end as vertex,
+            graph_id,
+            vertex,
             concat(
-                {{ '_output.graph_id' if graph_id else "''" }},
+                {{ 'graph_id' if graph_id else "''" }},
                 {{ "'__'," if graph_id }}
                 subgraph_id
             ) as subgraph_id,
             subgraph_members
-        from generate_subgraph_id as _output
-        inner join {{ input }} as _input on
-            (
-                _output.vertex = _input.{{ vertex_1 }}::text or
-                _output.vertex = _input.{{ vertex_2 }}::text
-            )
-            {{ 'and _output.graph_id = _input.' ~ graph_id ~ '::text' if graph_id }}
+        from generate_subgraph_id
     )
 
     select * from largest_connected_subgraphss
