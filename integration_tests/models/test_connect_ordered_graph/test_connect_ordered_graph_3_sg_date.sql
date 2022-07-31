@@ -17,7 +17,7 @@ computed as (
     ) }}
 ),
 
-subgraph_members as (
+required as (
     select v.* from (
         values
         ('1', 'A', 'B', '2022-01-01'::date),
@@ -33,6 +33,6 @@ subgraph_members as (
 
 select * from {{ cte_difference(
     'computed',
-    'subgraph_members',
+    'required',
     fields=["id", "vertex_1", "vertex_2", "order_date"]
 ) }}
