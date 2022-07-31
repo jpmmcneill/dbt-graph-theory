@@ -32,7 +32,11 @@ enforce_graph_types as (
         {{ edge_id }}::text as edge_id,
         {{ vertex_1 }}::text as vertex_1,
         {{ vertex_2 }}::text as vertex_2,
+        {% if ordering_type == 'timestamp' %}
+        {{ dbt_graph_theory.cast_timestamp(ordering_field) }} as ordering
+        {% else %}
         {{ ordering_field }}::{{ordering_type}} as ordering
+        {% endif %}
     from
         {{ input }}
 ),

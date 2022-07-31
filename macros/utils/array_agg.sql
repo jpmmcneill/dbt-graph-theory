@@ -12,5 +12,5 @@
 {% endmacro %}
 
 {% macro default__array_agg(field, distinct, order_field, order) %}
-    {{ exceptions.raise_compiler_error("dbt-graph-theory only supports the postgres and snowflake adapters") }}
+    {{ exceptions.raise_compiler_error("dbt-graph-theory only supports postgres and snowflake databases") }}
 {% endmacro %}
