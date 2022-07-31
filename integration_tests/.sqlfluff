@@ -15,3 +15,5 @@ comma_style = trailing
 
 [sqlfluff:rules:L010]
 capitalisation_policy = lower
+[sqlfluff:rules:L016]
+ignore_comment_lines = true
