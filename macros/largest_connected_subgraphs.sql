@@ -6,23 +6,26 @@
     graph_id=none
 ) %}
     {#
-        This macro takes a graph in the following structure, and identifies connected subgraphs of the same table.
-        Additional fields to the below are preserved and outputed by the macro.
+        This macro takes a graph in the given structure, and identifies connected subgraphs of the same table.
         
         Required [minimal] table structure:
-        graph_id (Optional, Any):
+        graph_id (Optional, text):
             An identifier at the graph level (ie. if the table in question represents multiple graphs).
             When this is not defined, it is assumed that the table represents the one graph.
-        edge_id (Any):
+        edge_id (text):
             An identifier of the edge (from vertex_1 to vertex_2). This field should be unique at the graph level.
-        vertex_1 (Any - convertable to text & same data type to vertex_2):
+        vertex_1 (text):
             The alias for the first (origin, for directed graphs) vertex of the given edge_id.
             Nulls are allowed, and correspond to the given vertex_2 not being connected to any other vertices.
-        vertex_2 (Any - convertable to text & same data type to vertex_2):
+        vertex_2 (text):
             The alias for the second (destination, for directed graphs) vertex of the given edge_id.
             Nulls are allowed, and correspond to the given vertex_1 not being connected to any other vertices.
 
-        It returns the original table, with two new fields:
+        It returns a query giving a vertex / graph level table with the following fields:
+        graph_id (text):
+            Identifies the graph based on the input table. If graph_id was not present in the input table, this field is always '1'.
+        vertex (text):
+            Identifies the vertex that the given subgraph and subgraph_members corresponds to. This (as well as graph_id) defines the level of the table.
         subgraph_id (text):
             An identifier of the (connected) subgraph for the given vertices for the given edge.
             This is unique at the graph level.  

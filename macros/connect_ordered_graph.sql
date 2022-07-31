@@ -6,6 +6,49 @@
     ordering={'edge_order': 'numeric'},
     graph_id=none
 ) %}
+    {#
+        This macro takes an ordered graph in the given structure, and connects any unconnected subgraphs.
+        Additional fields are dropped - if these are required, they should be joined back in.
+        
+        Required [minimal] table structure:
+        graph_id (Optional, text):
+            An identifier at the graph level (ie. if the table in question represents multiple graphs).
+            When this is not defined, it is assumed that the table represents the one graph.
+        edge_id (text):
+            An identifier of the edge (from vertex_1 to vertex_2). This field should be unique at the graph level.
+        vertex_1 (text):
+            The alias for the first (origin, for directed graphs) vertex of the given edge_id.
+            Nulls are allowed, and correspond to the given vertex_2 not being connected to any other vertices.
+        vertex_2 (text):
+            The alias for the second (destination, for directed graphs) vertex of the given edge_id.
+            Nulls are allowed, and correspond to the given vertex_1 not being connected to any other vertices.
+        ordering (timestamp, date or numeric):
+            The field corresponding to the order of the edges of the given graph. This is used to connect sensible nodes to each other
+            (ie. in order from one subgraph to the other).
+
+        It returns a query giving a vertex / graph level table with the following fields:
+        graph_id (text):
+            Identifies the graph based on the input table. If graph_id was not present in the input table, this field is always '1'.
+        vertex (text):
+            Identifies the vertex that the given subgraph and subgraph_members corresponds to. This (as well as graph_id) defines the level of the table.
+        subgraph_id (text):
+            An identifier of the (connected) subgraph for the given vertices for the given edge.
+            This is unique at the graph level.  
+        subgraph_members (array[Any]):
+            An array of the vertices that constitute the given subgraph. The data type of the array is that of the vertex_1 and vertex_2 fields. 
+
+        Parameters:
+        input (text or a ref / source): The input model or CTE that follows the structure above.
+        edge_id (text): The field corresponding to the edge_id field described above.
+        vertex_1 (text): The field corresponding to the vertex_1 field described above.
+        vertex_2 (text): The field corresponding to the vertex_2 field described above.
+        ordering (dict[text, text]):
+            A dict with key being the field corresponding to the ordering as descripted above,
+            and the value being the data type of the given field.
+            For example, { 'event_time' : 'timstamp' } corresponds to a field named event_time of type timestamp.
+            The data type must be one of: 'timestamp', 'date', 'numeric'.
+        graph_id (text, Optional, default = None): The field corresponding to the graph_id field described above.
+    #}
 
 {% set supported_ordering_types = ['numeric', 'timestamp', 'date'] %}
 
