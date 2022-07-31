@@ -4,7 +4,7 @@ with recast as (
         vertex_1,
         vertex_2,
         order_date::date as order_date
-    from {{ ref('test_connect_ordered_graph_2_sg_data') }}
+    from {{ ref('test_connect_ordered_graph_2_sg_date_data') }}
 ),
 
 computed as (
@@ -16,9 +16,6 @@ computed as (
         ordering={"order_date": "date"}
     ) }}
 ),
-
-
-
 
 subgraph_members as (
     select v.* from (
