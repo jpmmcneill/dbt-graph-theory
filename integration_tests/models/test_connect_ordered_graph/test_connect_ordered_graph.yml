@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: test_connect_ordered_graph_2_sg_date
+    description: Unit test checking a situation with 2 subgraphs of an ordered (date) graph being connected.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
+  - name: test_connect_ordered_graph_3_sg_date
+    description: Unit test checking a situation with 3 subgraphs of an ordered (date) graph being connected.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
+  - name: test_connect_ordered_graph_2_sg_numeric
+    description: Unit test checking a situation with 2 subgraphs of an ordered (numeric) graph being connected.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0

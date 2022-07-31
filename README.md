@@ -242,9 +242,9 @@ flowchart
 
 Arguments:
 - input: the input node (inputted as `ref(...)` or `source(...)`) or CTE (inputted as a string)
-- edge_id: the name of the field for the edge_id column in the given table graph representation.
-- vertex_1: the name of the field for the vertex_1 column in the given table graph representation.
-- vertex_2: the name of the field for the vertex_2 column in the given table graph representation.
+- edge_id [text]: the name of the field for the edge_id column in the given table graph representation.
+- vertex_1 [Any]: the name of the field for the vertex_1 column in the given table graph representation.
+- vertex_2 [Any]: the name of the field for the vertex_2 column in the given table graph representation.
 - graph_id [Optional, text]: the name of the field for the graph_id column in the given table graph representation.
 
 **Usage:**
