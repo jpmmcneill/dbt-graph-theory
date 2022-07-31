@@ -7,8 +7,14 @@
     graph_id=none
 ) %}
 
+{% set supported_ordering_types = ['numeric', 'timestamp', 'date'] %}
+
 {% set ordering_field = ordering.keys()|list|first %}
 {% set ordering_type = ordering.values()|list|first %}
+
+{{ exceptions.raise_compiler_error(
+    'Please input a supported ordering type - must be one of: '~ supported_ordering_types
+) if ordering_type not in supported_ordering_types }}
 
 with subgraphs as (
     {{ dbt_graph_theory.largest_connected_subgraphs(
@@ -26,7 +32,7 @@ enforce_graph_types as (
         {{ edge_id }}::text as edge_id,
         {{ vertex_1 }}::text as vertex_1,
         {{ vertex_2 }}::text as vertex_2,
-        {{ ordering_field }} as ordering
+        {{ ordering_field }}::{{ordering_type}} as ordering
     from
         {{ input }}
 ),
