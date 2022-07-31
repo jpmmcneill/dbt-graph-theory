@@ -26,8 +26,10 @@ required as (
         ('4', 'E', 'F', 6),
         ('5', 'F', 'G', 3),
         ('6', 'G', 'H', 5),
-        -- edges are inserted from the max moving backwards. here, 3 is the min of the "max" subgraph
-        -- so an edge is inserted from the edge with ordering 3 to the edge with ordering less than that, being the max in the lower subgraph
+        -- edges are inserted from the max moving backwards.
+        -- here, 3 is the min of the "max" subgraph
+        -- so an edge is inserted from the edge with ordering 3
+        -- to the edge with ordering less than that, being the max in the lower subgraph
         ('inserted_edge_1', 'D', 'F', 2.5)
     ) as v (id, vertex_1, vertex_2, order_int)
 )
