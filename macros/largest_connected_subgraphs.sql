@@ -43,6 +43,7 @@
     with recursive enforce_graph as (
         {{ dbt_graph_theory.enforce_graph_structure(
             input,
+            edge_id=edge_id,
             vertex_1=vertex_1,
             vertex_2=vertex_2,
             graph_id=graph_id
