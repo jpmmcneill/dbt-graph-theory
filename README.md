@@ -5,6 +5,9 @@
 
 A DBT package designed to help SQL based analysis of graphs. This package currently only supports snowflake and postgres versions >= 10.
 
+----
+## Introduction
+
 A [graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)) is a structure defined by a set of vertices and edges.
 
 ```mermaid
@@ -95,6 +98,22 @@ flowchart
 While in the example above no vertex labels were shared between different `graph_id`s, this is not a strict requirement. When a vertex is shared between two `graph_id`s, the vertices are considered seperate (ie. all algorithms are performed on the graph_id level).
 
 `edge_id` should be unique over the table (when `graph_id` is not defined) or at a `graph_id` level when `graph_id` is defined.
+
+### Types of Graph
+
+This package currently two types of graphs: Ordered Graphs and Non Ordered Graphs.
+There currently no _in data_ difference between these graphs (ie. a given graph table can correspond to both types), but some macros are designed to be implemented on specific types of graph. For example, `connect_ordered_graph` is designed to only be used with ordered graphs.
+
+#### Ordered Graphs
+
+Ordered graphs have a natural order to their nodes. In this package, the ordering is typically implemented via edges - meaning that this package treats ordered graphs as an extension of induced ordered graphs. For more detail, see [wikipedia](https://en.wikipedia.org/wiki/Ordered_graph). Ordered graphs are typically interacted with via an `ordering` field - this corresponds to the order of the edges / nodes. Supported Ordering types are numeric and date(time).
+
+An example of an ordered graph might be a rename path, or a customer's subscription history. These would both be ordered via a timestamp at which the rename happened / the customer swapped subscription type (respectively). 
+
+#### Non Ordered Graphs
+
+Non ordered graphs are simply graphs that do not fall into the above definition.
+
 
 ----
 ## Variables
@@ -197,6 +216,7 @@ from the integration_tests folder. sqlfluff does not currently support macros, m
 
 **[Macros](#macros)**
   - [largest_connected_subgraphs](#largest_connected_subgraphs)
+  - [enforce_graph_structure](#enforce_graph_structure)
 
 **[Helper Macros](#helper-macros)**
   - [array_agg](#array_agg)
@@ -238,6 +258,13 @@ flowchart
 ```
 
 ## Macros
+
+### [enforce_graph_structure](macros/enforce_graph_structure.sql)
+Readme is TODO
+
+### [connect_ordered_graph](macros/connect_ordered_graph.sql)
+Readme is TODO
+
 ### [largest_connected_subgraphs](macros/largest_connected_subgraphs.sql)
 
 Arguments:
