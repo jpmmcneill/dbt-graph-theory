@@ -204,7 +204,11 @@ include_new_edges as (
     union all
     select
         {{ 'graph_id as ' ~ graph_id ~ ',' if graph_id }}
-        concat('inserted_edge_', row_number() over (order by graph_id, vertex_1)::text) as {{ edge_id }},
+        concat(
+            {{ "graph_id::text, '_'," if graph_id }} 
+            'inserted_edge_',
+            row_number() over (order by graph_id, vertex_1)::text
+        ) as {{ edge_id }},
         {% if ordering_type == 'timestamp' %}
         case
             when
