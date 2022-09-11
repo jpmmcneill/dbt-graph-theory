@@ -191,14 +191,19 @@ To set up a python3 virtual environment, run the following in order from the `in
 ```
 python3 -m venv ci_venv
 source ci_venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements_<adapter>.txt
 ```
+
+ie. to use postgres, run `pip install -r requirements_postgres.txt
 
 To exit the virtual environment, simply run:
 
 ```
 deactivate
 ```
+
+By default, dbt runs against postgres on setup. You can use any of the adapters listed (the best way of seeing these is by the requirements files).
+Each adapter has a specific target in the ci_profiles.yml. You can specifc these with the `--target` flag in dbt - ie. `dbt run --profiles-dir ci_profiles --target ci_duckdb` will run dbt with duckdb.
 
 ### Setting up postgres server 
 
