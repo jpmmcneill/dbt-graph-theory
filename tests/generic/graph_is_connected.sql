@@ -18,11 +18,11 @@ with connected_subgraphs as (
 
 subgraphs_per_graph as (
     select
-        {{ graph_id ~ ',' if graph_id }}
+        {{ 'graph_id,' if graph_id }}
         count(distinct subgraph_id) as num_subgraphs
     from
         connected_subgraphs
-    {{ 'group by ' ~ graph_id if graph_id }}
+    {{ 'group by graph_id' if graph_id }}
 )
 
 select * from subgraphs_per_graph
