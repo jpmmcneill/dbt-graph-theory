@@ -1,7 +1,7 @@
 integration_tests:
-  target: postgres
+  target: ci_postgres
   outputs:
-    postgres:
+    ci_postgres:
       type: postgres
       host: localhost
       user: ci_user
@@ -17,3 +17,6 @@ integration_tests:
       dataset: james-dtype-test
       threads: 2
       keyfile: bigquery_secret.json
+    ci_duckdb:
+      type: duckdb
+      path: 'ci_db.duckdb'
