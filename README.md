@@ -215,8 +215,9 @@ from the integration_tests folder. sqlfluff does not currently support macros, m
   - [graph_is_connected](#graph_is_connected)
 
 **[Macros](#macros)**
-  - [largest_connected_subgraphs](#largest_connected_subgraphs)
   - [enforce_graph_structure](#enforce_graph_structure)
+  - [connect_ordered_graph](#connect_ordered_graph)
+  - [largest_connected_subgraphs](#largest_connected_subgraphs)
 
 **[Helper Macros](#helper-macros)**
   - [array_agg](#array_agg)
@@ -263,7 +264,134 @@ flowchart
 Readme is TODO
 
 ### [connect_ordered_graph](macros/connect_ordered_graph.sql)
-Readme is TODO
+
+Arguments:
+- input: the input node (inputted as `ref(...)` or `source(...)`) or CTE (inputted as a string)
+- edge_id [text]: the name of the field for the edge_id column in the given table graph representation.
+- vertex_1 [Any]: the name of the field for the vertex_1 column in the given table graph representation.
+- vertex_2 [Any]: the name of the field for the vertex_2 column in the given table graph representation.
+- ordering [Dict[text,text]]: the field (and data type) corresponding to the ordering of the given edges. For example, {'timestamp_field': 'timestamp'} corresponds to a field named `timestamp_field` of type `timestamp` being the ordering field. Data types must be one of: 'timestamp', 'date', 'numeric'.
+- graph_id [Optional, text]: the name of the field for the graph_id column in the given table graph representation.
+
+**Usage:**
+```sql
+with connect_subgraphs as (
+    {{ dbt_graph_theory.connect_ordered_graph(
+        input=ref('example_model'),
+        edge_id='edge_id_field_name',
+        vertex_1='vertex_1_field_name',
+        vertex_2='vertex_2_field_name',
+        ordering={'ordering_field': 'numeric'},
+        graph_id='graph_id_field_name'
+    ) }}
+)
+...
+```
+
+```sql
+...
+with connect_subgraphs as (
+    {{ dbt_graph_theory.connect_ordered_graph(
+        input=ref('example_model'),
+        edge_id='edge_id_field_name',
+        vertex_1='vertex_1_field_name',
+        vertex_2='vertex_2_field_name',
+        ordering={'different_ordering_field': 'timestamp'}
+    }}
+)
+...
+```
+
+This connects disconnected subgraphs (at the graph_id level) based on a ranking of orderings. This can only be applied on **ordered** graphs, meaning that an `ordering` must be provided via the `ordering` kwarg.
+
+In the below graph (the text on arrows is the ordering - in this case, numeric):
+
+```mermaid
+flowchart
+  A--->|1|B
+  B--->|2|C
+  D--->|3|E
+  E--->|4|F
+```
+
+The following graph (in table representation) is returned:
+
+```mermaid
+flowchart
+  A--->|1|B
+  B--->|2|C
+  C--->|2.5|D
+  D--->|3|E
+  E--->|4|F
+```
+
+The table in this case will have a new row in the output: 
+
+| graph_id |     edge_id     | vertex_2 | vertex_1 | ordering_field |
+|:--------:|:---------------:|:--------:|:--------:|:--------------:|
+|     1    | inserted_edge_1 |     C    |     D    |       2.5      |
+
+The orderings of inserted edges are dependent on the data type in question.
+
+Timestamps will be 1 second behind the later edge that is being connected to. For example:
+
+```mermaid
+flowchart
+  A--->|2021-01-01 10:25:15|B
+  B--->|2021-01-04 17:43:45|C
+  D--->|2021-01-05 14:02:05|E
+```
+
+would become
+
+```mermaid
+flowchart
+  A--->|2021-01-01 10:25:15|B
+  B--->|2021-01-04 17:43:45|C
+  C--->|2021-01-05 14:02:04|D
+  D--->|2021-01-05 14:02:05|E
+```
+
+Dates will be 1 day behind the later edge (if this does not conflict with the earlier edge, in which case the date is left equal):
+
+```mermaid
+flowchart
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  D--->|2021-01-05|E
+```
+
+would become
+
+```mermaid
+flowchart
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  C--->|2021-01-05|D
+  D--->|2021-01-05|E
+```
+
+and
+
+```mermaid
+flowchart
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  D--->|2021-01-07|E
+```
+
+would become
+
+```mermaid
+flowchart
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  C--->|2021-01-06|D
+  D--->|2021-01-07|E
+```
+
+Numerics go exactly in between the two nodes being connected, as demonstrated in the above example.
+
 
 ### [largest_connected_subgraphs](macros/largest_connected_subgraphs.sql)
 
