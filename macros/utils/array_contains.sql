@@ -14,6 +14,10 @@
     ({{ value }} in unnest({{array}}))
 {% endmacro %}
 
+{% macro duckdb__array_contains(array, value) %}
+    list_contains({{ array }}, {{ value }})
+{% endmacro %}
+
 {% macro default__array_contains(array, value) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}

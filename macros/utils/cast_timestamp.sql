@@ -14,6 +14,10 @@
     timestamp({{ field }})
 {% endmacro %}
 
+{% macro duckdb__cast_timestamp(field) %}
+    cast({{ field }} as timestamp)
+{% endmacro %}
+
 {% macro default__cast_timestamp(field) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}

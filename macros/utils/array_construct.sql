@@ -14,6 +14,10 @@
     [{{ components|join(",") }}]
 {% endmacro %}
 
+{% macro duckdb__array_construct(components) %}
+    list_value({{ components|join(",") }})
+{% endmacro %}
+
 {% macro default__array_construct(components) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}

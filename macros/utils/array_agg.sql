@@ -16,6 +16,10 @@
     array_agg({{'distinct' if distinct}} {{field}} ignore nulls {{ "order by " ~ order_field ~ " " ~ order if order_field }})
 {% endmacro %}
 
+{% macro duckdb__array_agg(field, distinct, order_field, order) %}
+    list({{ "distinct" if distinct }} {{ field }}) {{ "order by " ~ order_field ~ " " ~ order if order_field }}
+{% endmacro %}
+
 {% macro default__array_agg(field, distinct, order_field, order) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}
