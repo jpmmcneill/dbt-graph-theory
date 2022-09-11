@@ -302,27 +302,27 @@ with connect_subgraphs as (
 ...
 ```
 
-This connects disconnected subgraphs (at the graph_id level) based on a ranking of orderings.
+This connects disconnected subgraphs (at the graph_id level) based on a ranking of orderings. This can only be applied on **ordered** graphs, meaning that an `ordering` must be provided via the `ordering` kwarg.
 
 In the below graph (the text on arrows is the ordering - in this case, numeric):
 
 ```mermaid
 flowchart
-  A---|1|B
-  B---|2|C
-  D---|3|E
-  E---|4|F
+  A--->|1|B
+  B--->|2|C
+  D--->|3|E
+  E--->|4|F
 ```
 
 The following graph (in table representation) is returned:
 
 ```mermaid
 flowchart
-  A---|1|B
-  B---|2|C
-  C---|2.5|D
-  D---|3|E
-  E---|4|F
+  A--->|1|B
+  B--->|2|C
+  C--->|2.5|D
+  D--->|3|E
+  E--->|4|F
 ```
 
 The table in this case will have a new row in the output: 
@@ -337,57 +337,57 @@ Timestamps will be 1 second behind the later edge that is being connected to. Fo
 
 ```mermaid
 flowchart
-  A---|2021-01-01 10:25:15|B
-  B---|2021-01-04 17:43:45|C
-  D---|2021-01-05 14:02:05|E
+  A--->|2021-01-01 10:25:15|B
+  B--->|2021-01-04 17:43:45|C
+  D--->|2021-01-05 14:02:05|E
 ```
 
 would become
 
 ```mermaid
 flowchart
-  A---|2021-01-01 10:25:15|B
-  B---|2021-01-04 17:43:45|C
-  C---|2021-01-05 14:02:04|D
-  D---|2021-01-05 14:02:05|E
+  A--->|2021-01-01 10:25:15|B
+  B--->|2021-01-04 17:43:45|C
+  C--->|2021-01-05 14:02:04|D
+  D--->|2021-01-05 14:02:05|E
 ```
 
 Dates will be 1 day behind the later edge (if this does not conflict with the earlier edge, in which case the date is left equal):
 
 ```mermaid
 flowchart
-  A---|2021-01-01|B
-  B---|2021-01-04|C
-  D---|2021-01-05|E
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  D--->|2021-01-05|E
 ```
 
 would become
 
 ```mermaid
 flowchart
-  A---|2021-01-01|B
-  B---|2021-01-04|C
-  C---|2021-01-05|D
-  D---|2021-01-05|E
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  C--->|2021-01-05|D
+  D--->|2021-01-05|E
 ```
 
 and
 
 ```mermaid
 flowchart
-  A---|2021-01-01|B
-  B---|2021-01-04|C
-  D---|2021-01-07|E
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  D--->|2021-01-07|E
 ```
 
 would become
 
 ```mermaid
 flowchart
-  A---|2021-01-01|B
-  B---|2021-01-04|C
-  C---|2021-01-06|D
-  D---|2021-01-07|E
+  A--->|2021-01-01|B
+  B--->|2021-01-04|C
+  C--->|2021-01-06|D
+  D--->|2021-01-07|E
 ```
 
 Numerics go exactly in between the two nodes being connected, as demonstrated in the above example.
