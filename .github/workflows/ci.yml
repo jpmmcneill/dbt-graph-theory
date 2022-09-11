@@ -7,7 +7,27 @@ on: [push]
 jobs:
   test_lint:
     runs-on: ubuntu-latest
-    name: Run Tests
+    name: Run Tests Postgres
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Setup python venv
+        uses: syphar/restore-virtualenv@v1
+      - name: Install dependencies
+        run: pip install -r requirements_lint.txt
+      - name: Run dbt deps
+        run: dbt deps
+      - name: Run dbt seed
+        run: dbt seed --profiles-dir ci_profiles
+      - name: Run sqlfluff
+        run: sqlfluff lint -v
+  test_postgres:
+    runs-on: ubuntu-latest
+    name: Run Tests Postgres
     services:
       postgres:
         image: postgres:14.0-alpine
@@ -28,7 +48,27 @@ jobs:
       - name: Setup python venv
         uses: syphar/restore-virtualenv@v1
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements_postgres.txt
+      - name: Run dbt deps
+        run: dbt deps
+      - name: Run dbt seed
+        run: dbt seed --profiles-dir ci_profiles
+      - name: Run dbt models & tests
+        run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles
+  test_duckdb:
+    runs-on: ubuntu-latest
+    name: Run Tests DuckDB
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Setup python venv
+        uses: syphar/restore-virtualenv@v1
+      - name: Install dependencies
+        run: pip install -r requirements_duckdb.txt
       - name: Run dbt deps
         run: dbt deps
       - name: Run dbt seed
