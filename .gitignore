@@ -8,4 +8,5 @@ integration_tests/config/
 integration_tests/ci_profiles/.user.yml
 integration_tests/ci_profiles/*.json
 # CI DBs
-integration_tests/db/
+integration_tests/db/*
+!integration_tests/db/.gitkeep
