@@ -1,7 +1,7 @@
 #!/bin/bash
-pg_ctl stop -D config > /dev/null 2>&1;
-rm -rf config > /dev/null 2>&1;
-pg_ctl init -D config > /dev/null;
-pg_ctl start -D config  > /dev/null
+pg_ctl stop -D db/config > /dev/null 2>&1;
+rm -rf db/config > /dev/null 2>&1;
+pg_ctl init -D db/config > /dev/null;
+pg_ctl start -D db/config  > /dev/null
 psql -d postgres -c "create user ci_user with login superuser password 'ci'" > /dev/null;
 psql -d postgres -U ci_user  -c "create database ci_db" > /dev/null;

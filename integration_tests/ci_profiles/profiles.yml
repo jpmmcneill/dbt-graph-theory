@@ -19,4 +19,4 @@ integration_tests:
       keyfile: bigquery_secret.json
     ci_duckdb:
       type: duckdb
-      path: 'ci_db.duckdb'
+      path: 'db/ci_db.duckdb'
