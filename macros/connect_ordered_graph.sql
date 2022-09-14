@@ -45,7 +45,7 @@
         ordering (dict[text, text]):
             A dict with key being the field corresponding to the ordering as descripted above,
             and the value being the data type of the given field.
-            For example, { 'event_time' : 'timstamp' } corresponds to a field named event_time of type timestamp.
+            For example, { 'event_time' : 'timestamp' } corresponds to a field named event_time of type timestamp.
             The data type must be one of: 'timestamp', 'date', 'numeric'.
         graph_id (text, Optional, default = None): The field corresponding to the graph_id field described above.
     #}
