@@ -198,16 +198,6 @@ quit -- to end the server connection
 
 All CI models are required to run and pass tests for a merge to be allowed.
 
-### Running sqlfluff
-
-This package is linted by sqlfluff. To run this linter, simply run:
-
-```
-sqlfluff lint -v
-```
-
-from the integration_tests folder. sqlfluff does not currently support macros, meaning that only models in the integration_tests folder are linted.
-
 ----
 ## Contents
 
