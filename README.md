@@ -546,3 +546,18 @@ from {{ ref('model') }}
 ```
 
 **Note**: README structure inspired by dbt-lab's [dbt-utils](https://github.com/dbt-labs/dbt-utils) and calogica's [dbt-date](https://github.com/calogica/dbt-date) and [dbt-expectations](https://github.com/calogica/dbt-expectations).
+
+## Exceptions
+These macros are for internal package use only. They should help with raising consistend error messages.
+### [adapter_missing_exception](macros/exceptions/adapter_missing_exception.sql)
+
+Arguments: `none`
+
+Raise an exception to highlight that the given adapter is not currently supported.
+
+**Usage:**
+```sql
+...
+{{ dbt_graph_theory.adapter_missing_exception() }}
+...
+```
