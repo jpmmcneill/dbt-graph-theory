@@ -2,7 +2,8 @@
 
   {% set supported_adapters = [
   "dbt_postgres",
-  "dbt_snowflake"
+  "dbt_snowflake",
+  "dbt_bigquery"
 ] %}
 
   {{- exceptions.raise_compiler_error(

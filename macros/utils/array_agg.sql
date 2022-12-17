@@ -7,8 +7,13 @@
 {% endmacro %}
 
 {% macro postgres__array_agg(field, distinct, order_field, order) %}
-    {# nulls are removed from postgres to keep it alligned with other implementations #}
+    {# nulls are removed from the array to keep it alligned with the snowflake implementation #}
     array_remove(array_agg({{ "distinct" if distinct }} {{ field }} {{ "order by " ~ order_field ~ " " ~ order if order_field }}), null)
+{% endmacro %}
+
+{% macro bigquery__array_agg(field, distinct, order_field, order) %}
+    {# nulls are removed from the array to keep it alligned with the snowflake implementation #}
+    array_agg({{'distinct' if distinct}} {{field}} ignore nulls {{ "order by " ~ order_field ~ " " ~ order if order_field }})
 {% endmacro %}
 
 {% macro default__array_agg(field, distinct, order_field, order) %}
