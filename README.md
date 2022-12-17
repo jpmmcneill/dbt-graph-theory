@@ -183,6 +183,18 @@ dbt seed --profiles-dir ci_profiles
 dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles
 ```
 
+It is often easier to set a DBT_PROFILES_DIR environment variable to remove the need for the `--profiles-dir ci_profiles` part of the above:
+
+```bash
+export DBT_PROFILES_DIR=ci_profiles
+```
+
+Remember to undo this when you are finished with:
+
+```
+unset DBT_PROFILES_DIR
+```
+
 The style of integration test is raw data that is seeded and validated against by running a model and running tests that should pass when the expected result is present.
 
 ### Viewing local data
@@ -214,6 +226,7 @@ All CI models are required to run and pass tests for a merge to be allowed.
   - [array_append](#array_append)
   - [array_construct](#array_construct)
   - [array_contains](#array_contains)
+
 ## Generic Tests
 
 ### [graph_is_connected](tests/generic/graph_is_connected.sql)
@@ -546,3 +559,18 @@ from {{ ref('model') }}
 ```
 
 **Note**: README structure inspired by dbt-lab's [dbt-utils](https://github.com/dbt-labs/dbt-utils) and calogica's [dbt-date](https://github.com/calogica/dbt-date) and [dbt-expectations](https://github.com/calogica/dbt-expectations).
+
+## Exceptions
+These macros are for internal package use only. They should help with raising consistend error messages.
+### [adapter_missing_exception](macros/exceptions/adapter_missing_exception.sql)
+
+Arguments: `none`
+
+Raise an exception to highlight that the given adapter is not currently supported.
+
+**Usage:**
+```sql
+...
+{{ dbt_graph_theory.adapter_missing_exception() }}
+...
+```
