@@ -3,7 +3,7 @@ with recast as (
         id,
         vertex_1,
         vertex_2,
-        order_time::timestamp as order_time
+        cast(order_time as timestamp) as order_time
     from {{ ref('test_connect_ordered_graph_4_sg_timestamp_data') }}
 ),
 

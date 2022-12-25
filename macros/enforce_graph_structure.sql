@@ -17,10 +17,10 @@
     #}
 
 select
-    {{ edge_id }}::text as {{ edge_id }},
-    {{ graph_id ~ '::text as ' ~ graph_id ~ ',' if graph_id }}
-    {{ vertex_1 }}::text as {{ vertex_1 }},
-    {{ vertex_2 }}::text as {{ vertex_2 }}
+    cast({{ edge_id }} as text) as {{ edge_id }},
+    {{ 'cast(' ~ graph_id ~ ' as text) as ' ~ graph_id ~ ',' if graph_id }}
+    cast({{ vertex_1 }} as text) as {{ vertex_1 }},
+    cast({{ vertex_2 }} as text) as {{ vertex_2 }}
 from
     {{ input }}
 {% endmacro %}

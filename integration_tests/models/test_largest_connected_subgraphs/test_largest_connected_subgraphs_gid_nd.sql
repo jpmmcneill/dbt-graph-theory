@@ -8,7 +8,7 @@ with computed as (
 required as (
     select v.* from (
         values
-        (null::text, null::text, null::text, array[null])
+        (cast(null as text), cast(null as text), cast(null as text), array[null])
     ) as v (graph_id, vertex, subgraph_id, subgraph_members)
     where false
 )

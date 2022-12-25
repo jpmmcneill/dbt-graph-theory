@@ -11,7 +11,7 @@
 {% endmacro %}
 
 {% macro bigquery__array_append(array, new_value) %}
-    array_construct({{ array }}, [{{ new_value }}])
+    array_concat({{ array }}, [{{ new_value }}])
 {% endmacro %}
 
 {% macro default__array_append(array, new_value) %}

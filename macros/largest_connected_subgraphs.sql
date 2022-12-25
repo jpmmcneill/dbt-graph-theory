@@ -52,13 +52,13 @@
     
     all_vertices as (
         select
-            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_1 }} as vertex
         from enforce_graph
         where {{ vertex_1 }} is not null
         union
         select
-            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_2 }} as vertex
         from enforce_graph
         where {{ vertex_2 }} is not null
@@ -67,7 +67,7 @@
     {# enforce bi-directional edges #}
     all_edges as (
         select
-            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_1 }} as vertex_1,
             {{ vertex_2 }} as vertex_2
         from
@@ -77,7 +77,7 @@
             ({{ vertex_1 }} is not null or {{ vertex_2 }} is not null)
         union
         select
-            {{ graph_id if graph_id else '1::text' }} as graph_id,
+            {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_2 }} as vertex_1,
             {{ vertex_1 }} as vertex_2
         from
@@ -149,7 +149,7 @@
             graph_id,
             vertex,
             subgraph_members,
-            (dense_rank() over (partition by graph_id order by subgraph_members))::text as subgraph_id
+            cast(dense_rank() over (partition by graph_id order by subgraph_members) as text) as subgraph_id
         from node_subgraphs
     ),
 

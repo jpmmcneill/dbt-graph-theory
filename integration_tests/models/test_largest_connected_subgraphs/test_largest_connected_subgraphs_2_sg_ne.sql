@@ -7,7 +7,7 @@ with computed as (
 -- recast because vertex_2 is all null in seed data, interpreted as int dtype
 recast_computed as (
     select
-        vertex::text as vertex,
+        cast(vertex as text) as vertex,
         subgraph_id,
         subgraph_members
     from
