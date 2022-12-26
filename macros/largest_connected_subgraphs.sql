@@ -56,7 +56,7 @@
             {{ vertex_1 }} as vertex
         from enforce_graph
         where {{ vertex_1 }} is not null
-        union
+        {{ dbt_graph_theory.union(distinct=true) }}
         select
             {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_2 }} as vertex
@@ -75,7 +75,7 @@
         where
             coalesce({{ vertex_1 }} != {{ vertex_2 }}, true) and
             ({{ vertex_1 }} is not null or {{ vertex_2 }} is not null)
-        union
+        {{ dbt_graph_theory.union(distinct=true) }}
         select
             {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_2 }} as vertex_1,
@@ -99,7 +99,7 @@
         inner join all_vertices on
             all_vertices.graph_id = all_edges.graph_id and
             all_vertices.vertex = all_edges.vertex_1
-        union all
+        {{ dbt_graph_theory.union(distinct=false) }}
         select
             graph_walk.graph_id,
             graph_walk.orig_vertex,
@@ -124,7 +124,7 @@
             vertex_1 as end_vertex
         from
             graph_walk
-        union
+        {{ dbt_graph_theory.union(distinct=true) }}
         select
             graph_id,
             orig_vertex,

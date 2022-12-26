@@ -5,10 +5,16 @@ with computed as (
 ),
 
 required as (
-    select v.* from (
-        values
-        (cast(null as text), cast(null as text), array[null])
-    ) as v (vertex, subgraph_id, subgraph_members)
+    select v.* from
+    {{ dbt_graph_theory.sql_values(
+        data=[
+            ['null', 'null', dbt_graph_theory.array_construct(["1"])]
+        ],
+        metadata={
+            "names": ["vertex", "subgraph_id", "subgraph_members"],
+            "types": ["text", "text", "array<text>"]
+        }
+    ) }}
     where false
 )
 
