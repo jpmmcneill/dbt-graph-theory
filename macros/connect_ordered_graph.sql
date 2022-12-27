@@ -114,7 +114,7 @@ vertex_ordering as (
         vertex,
         ordering
     from from_vertices
-    {{ dbt_graph_theory.union(distinct=true) }}
+    {{ dbt_graph_theory.set_union(distinct=true) }}
     select
         graph_id,
         vertex,
@@ -201,7 +201,7 @@ include_new_edges as (
         vertex_1 as {{ vertex_1 }}, 
         vertex_2 as {{ vertex_2 }}
     from enforce_graph_types
-    {{ dbt_graph_theory.union(distinct=false) }}
+    {{ dbt_graph_theory.set_union(distinct=false) }}
     select
         {{ 'graph_id as ' ~ graph_id ~ ',' if graph_id }}
         concat(

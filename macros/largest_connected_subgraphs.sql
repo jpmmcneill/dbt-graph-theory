@@ -40,7 +40,7 @@
         graph_id (text, Optional, default = None): The field corresponding to the graph_id field described above.
     #}
 
-    with recursive enforce_graph as (
+    with enforce_graph as (
         {{ dbt_graph_theory.enforce_graph_structure(
             input,
             edge_id=edge_id,
@@ -56,7 +56,7 @@
             {{ vertex_1 }} as vertex
         from enforce_graph
         where {{ vertex_1 }} is not null
-        {{ dbt_graph_theory.union(distinct=true) }}
+        {{ dbt_graph_theory.set_union(distinct=true) }}
         select
             {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_2 }} as vertex
@@ -75,7 +75,7 @@
         where
             coalesce({{ vertex_1 }} != {{ vertex_2 }}, true) and
             ({{ vertex_1 }} is not null or {{ vertex_2 }} is not null)
-        {{ dbt_graph_theory.union(distinct=true) }}
+        {{ dbt_graph_theory.set_union(distinct=true) }}
         select
             {{ graph_id if graph_id else "cast('1' as text)" }} as graph_id,
             {{ vertex_2 }} as vertex_1,
@@ -99,7 +99,7 @@
         inner join all_vertices on
             all_vertices.graph_id = all_edges.graph_id and
             all_vertices.vertex = all_edges.vertex_1
-        {{ dbt_graph_theory.union(distinct=false) }}
+        {{ dbt_graph_theory.set_union(distinct=false) }}
         select
             graph_walk.graph_id,
             graph_walk.orig_vertex,
@@ -124,7 +124,7 @@
             vertex_1 as end_vertex
         from
             graph_walk
-        {{ dbt_graph_theory.union(distinct=true) }}
+        {{ dbt_graph_theory.set_union(distinct=true) }}
         select
             graph_id,
             orig_vertex,
