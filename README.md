@@ -8,9 +8,36 @@ A DBT package designed to help SQL based analysis of graphs.
 Supported adapters are: 
 - `dbt-snowflake`
 - `dbt-postgres` (note postgres versions >= 10 is requried)
-- `dbt-bigquery`
+- `dbt-bigquery` (see important note below!!!)
 
-Adapter contributions are welcome! Generally new adapters require additions to the `macros/utils` folder, assuming the given database / engine supports recursive CTEs.
+Adapter contributions are welcome! Generally new adapters require additions to the `macros/utils` folder, assuming the given database / engine supports recursive CTEs elegantly. In some cases (namely bigquery), specific array handling was required.
+
+It's recommended to use the unit test suit to develop new adapters. Please get in touch if you need assistance!
+
+**IMPORTANT NOTE**:
+BigQuery is untested in the wild, and is quite brittle regarding the `recursive` keyword. Ensure you __only__ macros without CTE nesting - for example, to use `largest_connected_subgraphs`, write SQL like:
+
+```sql
+-- model.sql
+{{
+  largest_connected_subgraphs(...)
+}}
+```
+
+rather than
+
+```sql
+-- model.sql
+with recursive foo as (
+  {{
+    largest_connected_subgraphs(...)
+  }}
+)
+...
+```
+
+This is to ensure that the `recursive` handling works. A feature request to improve this behaviour has been sent to google - please upvote:
+https://issuetracker.google.com/u/1/issues/263510050
 
 ----
 ## Introduction
