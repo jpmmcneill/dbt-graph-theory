@@ -9,18 +9,18 @@
         This macro takes a table and enforces that it follows the graph table structure.
 
         Parameters:
-        input (text or a ref / source): The input model or CTE that follows the structure above.
-        edge_id (text): The edge_id field of the given input.
-        vertex_1 (text): The vertex_1 field of the given input.
-        vertex_2 (text): The vertex_2 field of the given input.
-        graph_id (text, Optional, default = None): The (optional) graph_di field of the given input.
+        input (string or a ref / source): The input model or CTE that follows the structure above.
+        edge_id (string): The edge_id field of the given input.
+        vertex_1 (string): The vertex_1 field of the given input.
+        vertex_2 (string): The vertex_2 field of the given input.
+        graph_id (string, Optional, default = None): The (optional) graph_di field of the given input.
     #}
 
 select
-    cast({{ edge_id }} as text) as {{ edge_id }},
-    {{ 'cast(' ~ graph_id ~ ' as text) as ' ~ graph_id ~ ',' if graph_id }}
-    cast({{ vertex_1 }} as text) as {{ vertex_1 }},
-    cast({{ vertex_2 }} as text) as {{ vertex_2 }}
+    cast({{ edge_id }} as string) as {{ edge_id }},
+    {{ 'cast(' ~ graph_id ~ ' as string) as ' ~ graph_id ~ ',' if graph_id }}
+    cast({{ vertex_1 }} as string) as {{ vertex_1 }},
+    cast({{ vertex_2 }} as string) as {{ vertex_2 }}
 from
     {{ input }}
 {% endmacro %}

@@ -1,3 +1,4 @@
+{# Currently unused - but this was used for bigquery unit tests #}
 {% macro sql_values(data=[],metadata={"names": [], "types": []}, table_alias = "v") %}
 {#
     sql_values is a list of ordered lists with the relevant sql_values.
