@@ -3,7 +3,7 @@ with recast as (
         id,
         vertex_1,
         vertex_2,
-        order_date::date as order_date
+        cast(order_date as date) as order_date
     from {{ ref('test_connect_ordered_graph_3_sg_date_data') }}
 ),
 
@@ -20,14 +20,14 @@ computed as (
 required as (
     select v.* from (
         values
-        ('1', 'A', 'B', '2022-01-01'::date),
-        ('2', 'B', 'C', '2022-01-03'::date),
-        ('3', 'C', 'D', '2022-01-05'::date),
-        ('4', 'E', 'F', '2022-01-08'::date),
-        ('5', 'F', 'G', '2022-01-16'::date),
-        ('6', 'H', 'I', '2022-01-27'::date),
-        ('inserted_edge_1', 'D', 'E', '2022-01-07'::date),
-        ('inserted_edge_2', 'G', 'H', '2022-01-26'::date)
+        ('1', 'A', 'B', cast('2022-01-01' as date)),
+        ('2', 'B', 'C', cast('2022-01-03' as date)),
+        ('3', 'C', 'D', cast('2022-01-05' as date)),
+        ('4', 'E', 'F', cast('2022-01-08' as date)),
+        ('5', 'F', 'G', cast('2022-01-16' as date)),
+        ('6', 'H', 'I', cast('2022-01-27' as date)),
+        ('inserted_edge_1', 'D', 'E', cast('2022-01-07' as date)),
+        ('inserted_edge_2', 'G', 'H', cast('2022-01-26' as date))
     ) as v (id, vertex_1, vertex_2, order_date)
 )
 

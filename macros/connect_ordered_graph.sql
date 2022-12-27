@@ -11,15 +11,15 @@
         Additional fields are dropped - if these are required, they should be joined back in.
         
         Required [minimal] table structure:
-        graph_id (Optional, text):
+        graph_id (Optional, string):
             An identifier at the graph level (ie. if the table in question represents multiple graphs).
             When this is not defined, it is assumed that the table represents the one graph.
-        edge_id (text):
+        edge_id (string):
             An identifier of the edge (from vertex_1 to vertex_2). This field should be unique at the graph level.
-        vertex_1 (text):
+        vertex_1 (string):
             The alias for the first (origin, for directed graphs) vertex of the given edge_id.
             Nulls are allowed, and correspond to the given vertex_2 not being connected to any other vertices.
-        vertex_2 (text):
+        vertex_2 (string):
             The alias for the second (destination, for directed graphs) vertex of the given edge_id.
             Nulls are allowed, and correspond to the given vertex_1 not being connected to any other vertices.
         ordering (timestamp, date or numeric):
@@ -27,27 +27,27 @@
             (ie. in order from one subgraph to the other).
 
         It returns a query giving a vertex / graph level table with the following fields:
-        graph_id (text):
+        graph_id (string):
             Identifies the graph based on the input table. If graph_id was not present in the input table, this field is always '1'.
-        vertex (text):
+        vertex (string):
             Identifies the vertex that the given subgraph and subgraph_members corresponds to. This (as well as graph_id) defines the level of the table.
-        subgraph_id (text):
+        subgraph_id (string):
             An identifier of the (connected) subgraph for the given vertices for the given edge.
             This is unique at the graph level.  
         subgraph_members (array[Any]):
             An array of the vertices that constitute the given subgraph. The data type of the array is that of the vertex_1 and vertex_2 fields. 
 
         Parameters:
-        input (text or a ref / source): The input model or CTE that follows the structure above.
-        edge_id (text): The field corresponding to the edge_id field described above.
-        vertex_1 (text): The field corresponding to the vertex_1 field described above.
-        vertex_2 (text): The field corresponding to the vertex_2 field described above.
-        ordering (dict[text, text]):
+        input (string or a ref / source): The input model or CTE that follows the structure above.
+        edge_id (string): The field corresponding to the edge_id field described above.
+        vertex_1 (string): The field corresponding to the vertex_1 field described above.
+        vertex_2 (string): The field corresponding to the vertex_2 field described above.
+        ordering (dict[string, string]):
             A dict with key being the field corresponding to the ordering as descripted above,
             and the value being the data type of the given field.
             For example, { 'event_time' : 'timestamp' } corresponds to a field named event_time of type timestamp.
             The data type must be one of: 'timestamp', 'date', 'numeric'.
-        graph_id (text, Optional, default = None): The field corresponding to the graph_id field described above.
+        graph_id (string, Optional, default = None): The field corresponding to the graph_id field described above.
     #}
 
 {% set supported_ordering_types = ['numeric', 'timestamp', 'date'] %}
@@ -71,14 +71,14 @@ with subgraphs as (
 
 enforce_graph_types as (
     select
-        {{ graph_id if graph_id else '1::text'}}::text as graph_id,
-        {{ edge_id }}::text as edge_id,
-        {{ vertex_1 }}::text as vertex_1,
-        {{ vertex_2 }}::text as vertex_2,
+        cast({{ graph_id if graph_id else '1'}} as {{ type_string() }}) as graph_id,
+        cast({{ edge_id }} as {{ type_string() }}) as edge_id,
+        cast({{ vertex_1 }} as {{ type_string() }}) as vertex_1,
+        cast({{ vertex_2 }} as {{ type_string() }}) as vertex_2,
         {% if ordering_type == 'timestamp' %}
         {{ dbt_graph_theory.cast_timestamp(ordering_field) }} as ordering
         {% else %}
-        {{ ordering_field }}::{{ordering_type}} as ordering
+        cast({{ ordering_field }} as {{ordering_type}}) as ordering
         {% endif %}
     from
         {{ input }}
@@ -114,7 +114,7 @@ vertex_ordering as (
         vertex,
         ordering
     from from_vertices
-    union
+    {{ dbt_graph_theory.set_union(distinct=true) }}
     select
         graph_id,
         vertex,
@@ -201,13 +201,13 @@ include_new_edges as (
         vertex_1 as {{ vertex_1 }}, 
         vertex_2 as {{ vertex_2 }}
     from enforce_graph_types
-    union all
+    {{ dbt_graph_theory.set_union(distinct=false) }}
     select
         {{ 'graph_id as ' ~ graph_id ~ ',' if graph_id }}
         concat(
-            {{ "graph_id::text, '_'," if graph_id }} 
+            {{ "cast(graph_id as {{ type_string() }}), '_'," if graph_id }} 
             'inserted_edge_',
-            row_number() over (order by graph_id, vertex_1)::text
+            cast(row_number() over (order by graph_id, vertex_1) as {{ type_string() }})
         ) as {{ edge_id }},
         {% if ordering_type == 'timestamp' %}
         case

@@ -3,7 +3,41 @@
 [![](https://img.shields.io/static/v1?label=dbt-core&message=1.0.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-core)
 [![](https://img.shields.io/static/v1?label=dbt-utils&message=0.8.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-utils/)
 
-A DBT package designed to help SQL based analysis of graphs. This package currently only supports snowflake and postgres versions >= 10.
+A DBT package designed to help SQL based analysis of graphs.
+
+Supported adapters are: 
+- `dbt-snowflake`
+- `dbt-postgres` (note postgres versions >= 10 is requried)
+- `dbt-bigquery` (see important note below!!!)
+
+Adapter contributions are welcome! Generally new adapters require additions to the `macros/utils` folder, assuming the given database / engine supports recursive CTEs elegantly. In some cases (namely bigquery), specific array handling was required.
+
+It's recommended to use the unit test suit to develop new adapters. Please get in touch if you need assistance!
+
+**IMPORTANT NOTE**:
+BigQuery is untested in the wild, and is quite brittle regarding the `recursive` keyword. Ensure you __only__ macros without CTE nesting - for example, to use `largest_connected_subgraphs`, write SQL like:
+
+```sql
+-- model.sql
+{{
+  largest_connected_subgraphs(...)
+}}
+```
+
+rather than
+
+```sql
+-- model.sql
+with recursive foo as (
+  {{
+    largest_connected_subgraphs(...)
+  }}
+)
+...
+```
+
+This is to ensure that the `recursive` handling works. A feature request to improve this behaviour has been sent to google - please upvote:
+https://issuetracker.google.com/u/1/issues/263510050
 
 ----
 ## Introduction
@@ -473,7 +507,7 @@ Arguments:
 
 This is an adapter specific macro for aggregating a column into an array.
 
-This macro excludes nulls, and supports snowflake and postgres.
+This macro excludes nulls.
 
 **Usage:**
 ```sql
@@ -501,8 +535,6 @@ Arguments:
 
 This is an adapter specific macro for appending a new value into an array.
 
-This macro supports snowflake and postgres.
-
 **Usage:**
 ```sql
 select
@@ -523,8 +555,6 @@ Arguments:
 - components [list[text]]: the jinja list which will be used (in order) for the array's construction.
 
 This is an adapter specific macro for constructuring an array from a list of values.
-
-This macro supports snowflake and postgres.
 
 **Usage:**
 ```sql
@@ -548,8 +578,6 @@ Arguments:
 - value [text]: the field (or hardcoded data) which is checked for in the given array.
 
 This is an adapter specific macro to test whether a value is contained within an array.
-
-This macro supports snowflake and postgres.
 
 **Usage:**
 ```sql

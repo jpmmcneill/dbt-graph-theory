@@ -10,6 +10,10 @@
     array_append({{ array }}, {{ new_value }})
 {% endmacro %}
 
+{% macro bigquery__array_append(array, new_value) %}
+    array_concat({{ array }}, [{{ new_value }}])
+{% endmacro %}
+
 {% macro default__array_append(array, new_value) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}

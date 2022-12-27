@@ -10,6 +10,10 @@
     cast({{ field }} as timestamp)
 {% endmacro %}
 
+{% macro bigquery__cast_timestamp(field) %}
+    timestamp({{ field }})
+{% endmacro %}
+
 {% macro default__cast_timestamp(field) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}

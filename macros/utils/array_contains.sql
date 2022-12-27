@@ -10,6 +10,10 @@
     {{ value }} = any({{ array }})
 {% endmacro %}
 
+{% macro bigquery__array_contains(array, value) %}
+    ({{ value }} in unnest({{array}}))
+{% endmacro %}
+
 {% macro default__array_contains(array, value) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}
