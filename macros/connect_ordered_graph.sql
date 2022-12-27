@@ -71,10 +71,10 @@ with subgraphs as (
 
 enforce_graph_types as (
     select
-        cast({{ graph_id if graph_id else '1'}} as string) as graph_id,
-        cast({{ edge_id }} as string) as edge_id,
-        cast({{ vertex_1 }} as string) as vertex_1,
-        cast({{ vertex_2 }} as string) as vertex_2,
+        cast({{ graph_id if graph_id else '1'}} as {{ type_string() }}) as graph_id,
+        cast({{ edge_id }} as {{ type_string() }}) as edge_id,
+        cast({{ vertex_1 }} as {{ type_string() }}) as vertex_1,
+        cast({{ vertex_2 }} as {{ type_string() }}) as vertex_2,
         {% if ordering_type == 'timestamp' %}
         {{ dbt_graph_theory.cast_timestamp(ordering_field) }} as ordering
         {% else %}
@@ -205,9 +205,9 @@ include_new_edges as (
     select
         {{ 'graph_id as ' ~ graph_id ~ ',' if graph_id }}
         concat(
-            {{ "cast(graph_id as string), '_'," if graph_id }} 
+            {{ "cast(graph_id as {{ type_string() }}), '_'," if graph_id }} 
             'inserted_edge_',
-            cast(row_number() over (order by graph_id, vertex_1) as string)
+            cast(row_number() over (order by graph_id, vertex_1) as {{ type_string() }})
         ) as {{ edge_id }},
         {% if ordering_type == 'timestamp' %}
         case

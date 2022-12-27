@@ -7,7 +7,7 @@ with recursive computed as (
 required as (
     select v.* from (
         values
-        (null::string, null::string, array[null]),
+        (null::{{ type_string() }}, null::{{ type_string() }}, array[null])
     ) as v (vertex, subgraph_id, subgraph_members)
     where false
 )
