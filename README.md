@@ -40,6 +40,25 @@ This is to ensure that the `recursive` handling works. A feature request to impr
 https://issuetracker.google.com/u/1/issues/263510050
 
 ----
+## Install
+
+`dbt-graph-theory` currently supports `dbt 1.0.0` or higher.
+
+Check [dbt package hub](https://hub.getdbt.com/jpmmcneill/dbt-graph-theory/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+
+Include in `packages.yml`
+
+```yaml
+packages:
+  - package: jpmmcneill/dbt_graph_theory
+    version: [">=0.1.0", "<0.2.0"]
+    # <see https://github.com/jpmmcneill/dbt-graph-theory/releases/latest> for the latest version tag
+```
+
+For latest release, see [https://github.com/jpmmcneill/dbt-graph-theory/releases](https://github.com/jpmmcneill/dbt-graph-theory/releases)
+
+
+----
 ## Introduction
 
 A [graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)) is a structure defined by a set of vertices and edges.
