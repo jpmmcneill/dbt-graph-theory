@@ -1,7 +1,7 @@
 integration_tests:
-  target: ci
+  target: postgres
   outputs:
-    ci:
+    postgres:
       type: postgres
       host: localhost
       user: ci_user
@@ -10,3 +10,10 @@ integration_tests:
       dbname: ci_db
       schema: ci_schema
       threads: 2
+    bigquery:
+      type: bigquery
+      method: service-account
+      project: james-dtype-test
+      dataset: james-dtype-test
+      threads: 2
+      keyfile: bigquery_secret.json

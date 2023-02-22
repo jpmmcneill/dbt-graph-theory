@@ -6,3 +6,4 @@ logs/
 integration_tests/ci_venv/
 integration_tests/config/
 integration_tests/ci_profiles/.user.yml
+integration_tests/ci_profiles/*.json
