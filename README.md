@@ -1,5 +1,7 @@
 # dbt-graph-theory
 
+[![Tests](https://github.com/jpmmcneill/dbt-graph-theory/actions/workflows/ci.yml/badge.svg)](https://github.com/jpmmcneill/dbt-graph-theory/actions)
+
 [![](https://img.shields.io/static/v1?label=dbt-core&message=1.0.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-core)
 [![](https://img.shields.io/static/v1?label=dbt-utils&message=0.8.0&logo=dbt&logoColor=FF694B&labelColor=5c5c5c&color=047377&style=for-the-badge)](https://github.com/dbt-labs/dbt-utils/)
 
