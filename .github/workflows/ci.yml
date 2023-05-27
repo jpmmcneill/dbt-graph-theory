@@ -50,11 +50,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements_postgres.txt
       - name: Run dbt deps
-        run: dbt deps --profiles-dir ci_profiles --target ci_postgres
+        run: dbt deps --profiles-dir ci_profiles --target postgres
       - name: Run dbt seed
-        run: dbt seed --profiles-dir ci_profiles --target ci_postgres
+        run: dbt seed --profiles-dir ci_profiles --target postgres
       - name: Run dbt models & tests
-        run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles --target ci_postgres
+        run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles --target postgres
   test_duckdb:
     runs-on: ubuntu-latest
     name: Run Tests DuckDB
@@ -70,8 +70,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements_duckdb.txt
       - name: Run dbt deps
-        run: dbt deps --profiles-dir ci_profiles --target ci_duckdb
+        run: dbt deps --profiles-dir ci_profiles --target duckdb
       - name: Run dbt seed
-        run: dbt seed --profiles-dir ci_profiles --target ci_duckdb
+        run: dbt seed --profiles-dir ci_profiles --target duckdb
       - name: Run dbt models & tests
-        run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles --target ci_duckdb
+        run: dbt build -s dbt_graph_theory_integration_tests --profiles-dir ci_profiles --target duckdb
