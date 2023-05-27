@@ -213,17 +213,17 @@ include_new_edges as (
         case
             when
                 new_ordering = old_ordering or
-                old_ordering = {{ dbt_utils.dateadd('second', '-1', 'new_ordering') }}
+                old_ordering = {{ dateadd('second', '-1', 'new_ordering') }}
                 then new_ordering
-            else {{ dbt_utils.dateadd('second', '-1', 'new_ordering') }}
+            else {{ dateadd('second', '-1', 'new_ordering') }}
         end
         {% elif ordering_type == 'date' %}
         case
             when
                 new_ordering = old_ordering or
-                old_ordering = {{ dbt_utils.dateadd('day', '-1', 'new_ordering') }}
+                old_ordering = {{ dateadd('day', '-1', 'new_ordering') }}
                 then new_ordering
-            else {{ dbt_utils.dateadd('day', '-1', 'new_ordering') }}
+            else {{ dateadd('day', '-1', 'new_ordering') }}
         end
         {% elif ordering_type == 'numeric' %}
         old_ordering + (new_ordering - old_ordering) / 2

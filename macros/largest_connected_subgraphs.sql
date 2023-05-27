@@ -143,15 +143,15 @@ from node_subgraphs
             graph_id,
             orig_vertex,
             vertex_1 as end_vertex
-        from
-            graph_walk
+        from graph_walk
+        where vertex_1 is not null
         {{ dbt_graph_theory.set_union(distinct=true) }}
         select
             graph_id,
             orig_vertex,
             vertex_2 as end_vertex
-        from
-            graph_walk
+        from graph_walk
+        where vertex_2 is not null
     ),
 
     node_subgraphs as (
