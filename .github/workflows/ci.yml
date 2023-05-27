@@ -20,9 +20,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements_lint.txt
       - name: Run dbt deps
-        run: dbt deps --profiles-dir ci_profiles --target ci_duckdb
+        run: dbt deps --profiles-dir ci_profiles --target duckdb
       - name: Run dbt seed
-        run: dbt seed --profiles-dir ci_profiles --target ci_duckdb
+        run: dbt seed --profiles-dir ci_profiles --target duckdb
       - name: Run sqlfluff
         run: sqlfluff lint -v
   test_postgres:
