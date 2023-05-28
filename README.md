@@ -191,10 +191,10 @@ To set up a python3 virtual environment, run the following in order from the `in
 ```
 python3 -m venv ci_venv
 source ci_venv/bin/activate
-pip install -r requirements_<adapter>.txt
+pip install -r requirements/requirements_<adapter>.txt
 ```
 
-ie. to use postgres, run `pip install -r requirements_postgres.txt
+ie. to use postgres, run `pip install -r requirements/requirements_postgres.txt
 
 To exit the virtual environment, simply run:
 
@@ -207,7 +207,7 @@ Each adapter has a specific target in the ci_profiles.yml. You can specifc these
 
 ### Setting up postgres server 
 
-Integration tests run on a local postgres server. The below assumes postgres has been installed via homebrew.
+Postgres integration tests run on a local postgres server. The below assumes postgres has been installed via homebrew.
 
 A postgres server can be spun up with the following:
 

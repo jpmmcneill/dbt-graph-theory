@@ -18,7 +18,7 @@ jobs:
       - name: Setup python venv
         uses: syphar/restore-virtualenv@v1
       - name: Install dependencies
-        run: pip install -r requirements_lint.txt
+        run: pip install -r requirements/requirements_lint.txt
       - name: Run dbt deps
         run: dbt deps --profiles-dir ci_profiles --target duckdb
       - name: Run dbt seed
@@ -48,7 +48,7 @@ jobs:
       - name: Setup python venv
         uses: syphar/restore-virtualenv@v1
       - name: Install dependencies
-        run: pip install -r requirements_postgres.txt
+        run: pip install -r requirements/requirements_postgres.txt
       - name: Run dbt deps
         run: dbt deps --profiles-dir ci_profiles --target postgres
       - name: Run dbt seed
@@ -68,7 +68,7 @@ jobs:
       - name: Setup python venv
         uses: syphar/restore-virtualenv@v1
       - name: Install dependencies
-        run: pip install -r requirements_duckdb.txt
+        run: pip install -r requirements/requirements_duckdb.txt
       - name: Run dbt deps
         run: dbt deps --profiles-dir ci_profiles --target duckdb
       - name: Run dbt seed
