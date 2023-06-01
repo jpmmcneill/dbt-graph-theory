@@ -9,8 +9,9 @@ A DBT package designed to help SQL based analysis of graphs.
 
 Supported adapters are: 
 - `dbt-snowflake`
-- `dbt-postgres` (note postgres versions >= 10 is requried)
+- `dbt-postgres` (note postgres version >= 10 is required)
 - `dbt-bigquery` (see important note below!!!)
+- `dbt-duckdb` (note duckdb version >= 0.8.1 is required)
 
 Adapter contributions are welcome! Generally new adapters require additions to the `macros/utils` folder, assuming the given database / engine supports recursive CTEs elegantly. In some cases (namely bigquery), specific array handling was required.
 
@@ -180,7 +181,7 @@ This package currently has no variables that need to be configured.
 
 This section assumes development on a mac, where python3 & postgresql are installed.
 
-At the moment, only postgres integration tests are implemented.
+At the moment, postgres and duckdb integration tests are implemented.
 
 ### Setting up python environment 
 
@@ -204,6 +205,8 @@ deactivate
 
 By default, dbt runs against postgres on setup. You can use any of the adapters listed (the best way of seeing these is by the requirements files).
 Each adapter has a specific target in the ci_profiles.yml. You can specifc these with the `--target` flag in dbt - ie. `dbt run --profiles-dir ci_profiles --target ci_duckdb` will run dbt with duckdb.
+
+The easiest way to follow along with this is with the CI file specified in `.github/workflows/ci.yml`
 
 ### Setting up postgres server 
 
@@ -259,7 +262,9 @@ The style of integration test is raw data that is seeded and validated against b
 
 ### Viewing local data
 
-To view data generated in the integration tests locally, simply connect to the database and query the given table:
+To view data generated in the integration tests locally, simply connect to the database and query the given table.
+
+The details change between adapters. For postgres:
 
 ```
 psql ci_db
