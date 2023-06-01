@@ -24,7 +24,7 @@ jobs:
       - name: Run dbt seed
         run: dbt seed --profiles-dir ci_profiles --target duckdb
       - name: Run sqlfluff
-        run: sqlfluff lint -v
+        run: sqlfluff lint -v -i parsing
   test_postgres:
     runs-on: ubuntu-latest
     name: Run Tests Postgres

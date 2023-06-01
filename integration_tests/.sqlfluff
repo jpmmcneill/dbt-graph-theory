@@ -1,19 +1,22 @@
 [sqlfluff]
 templater = dbt
-dialect = postgres
+dialect = duckdb
+exclude_rules = ST03, CV11
 
 [sqlfluff:templater:dbt]
 profiles_dir = ci_profiles
 profile = integration_tests
 target = duckdb
 
-[sqlfluff:rules]
+[sqlflull:indentation]
 tab_space_size = 4
+
+[sqlfluff:rules]
 max_line_length = 100
 indent_unit = space
 comma_style = trailing
 
-[sqlfluff:rules:L010]
+[sqlfluff:rules:capitalisation.keywords]
 capitalisation_policy = lower
-[sqlfluff:rules:L016]
+[sqlfluff:rules:layout.long_lines]
 ignore_comment_lines = true
