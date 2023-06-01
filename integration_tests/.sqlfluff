@@ -5,7 +5,7 @@ dialect = postgres
 [sqlfluff:templater:dbt]
 profiles_dir = ci_profiles
 profile = integration_tests
-target = ci_duckdb
+target = duckdb
 
 [sqlfluff:rules]
 tab_space_size = 4

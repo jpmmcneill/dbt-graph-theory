@@ -1,2 +1,2 @@
 dbt-duckdb>=1.5,<1.6
-duckdb==0.8.1.dev125
+duckdb --pre
