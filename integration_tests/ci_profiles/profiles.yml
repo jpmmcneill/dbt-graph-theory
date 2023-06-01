@@ -17,3 +17,6 @@ integration_tests:
       dataset: james-dtype-test
       threads: 2
       keyfile: bigquery_secret.json
+    duckdb:
+      type: duckdb
+      path: 'db/ci_db.duckdb'

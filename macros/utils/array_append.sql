@@ -14,6 +14,10 @@
     array_concat({{ array }}, [{{ new_value }}])
 {% endmacro %}
 
+{% macro duckdb__array_append(array, new_value) %}
+    list_append({{ array }}, {{ new_value }})
+{% endmacro %}
+
 {% macro default__array_append(array, new_value) %}
     {{ dbt_graph_theory.adapter_missing_exception() }}
 {% endmacro %}
