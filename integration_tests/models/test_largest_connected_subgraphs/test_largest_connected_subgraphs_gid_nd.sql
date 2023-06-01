@@ -8,7 +8,12 @@ with computed as (
 required as (
     select v.* from (
         values
-        (cast(null as {{ type_string() }}), cast(null as {{ type_string() }}), cast(null as {{ type_string() }}), array[null])
+        (
+            cast(null as {{ type_string() }}),
+            cast(null as {{ type_string() }}),
+            cast(null as {{ type_string() }}),
+            array[null]
+        )
     ) as v (graph_id, vertex, subgraph_id, subgraph_members)
     where false
 )

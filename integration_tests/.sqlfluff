@@ -2,6 +2,7 @@
 templater = dbt
 dialect = duckdb
 exclude_rules = ST03, CV11
+max_line_length = 120
 
 [sqlfluff:templater:dbt]
 profiles_dir = ci_profiles
@@ -12,7 +13,6 @@ target = duckdb
 tab_space_size = 4
 
 [sqlfluff:rules]
-max_line_length = 100
 indent_unit = space
 comma_style = trailing
 
