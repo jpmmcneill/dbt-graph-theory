@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: test_reduce_join_2_vertices
+    description: Tests that the reduce_join macro works when there are two nodes on either side of the join.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
+  - name: test_reduce_join_2_vertices_dupes
+    description: Tests that the reduce_join macro works when there are two nodes on either side of the join (with duplicate rows).
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
+  - name: test_reduce_join_4_vertices
+    description: Tests that the reduce_join macro works when there are four nodes on either side of the join.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal:
+          value: 0
